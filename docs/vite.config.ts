@@ -20,7 +20,6 @@ export default defineConfig({
 
     // manifest: true,
     rollupOptions: {
-      external: ['leaflet', /^leaflet\/.*/, 'd3', 'd3-hexbin'],
       output: {
         globals: {
           leaflet: 'L',

@@ -1,8 +1,9 @@
 {
   "name": "leaflet-hexbin-docs",
   "version": "0.0.0",
-  "private": false,
+  "private": true,
   "type": "module",
+  "homepage": "https://lsdch.github.io/leaflet-hexbin/",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -11,7 +12,9 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "predeploy": "vite build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "d3": "^7.9.0",
@@ -40,6 +43,7 @@
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.18.0",
     "eslint-plugin-vue": "^9.32.0",
+    "gh-pages": "^6.3.0",
     "jiti": "^2.4.2",
     "jsdom": "^26.0.0",
     "npm-run-all2": "^7.0.2",
