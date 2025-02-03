@@ -6,7 +6,6 @@
 import { Functions, InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
 import * as L from 'leaflet'
 import 'leaflet-hexbin'
-import L from 'leaflet'
 
 import {
   markRaw,
