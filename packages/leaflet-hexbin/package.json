@@ -3,6 +3,21 @@
   "version": "0.0.1",
   "private": false,
   "type": "module",
+  "license": "MIT",
+  "description": "Leaflet plugin to create hexbin layers",
+  "homepage": "https://lsdch.github.io/leaflet-hexbin/",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": "git://github.com/lsdch/leaflet-hexbin.git",
+  "bugs": {
+    "url": "https://github.com/lsdch/leaflet-hexbin/issues"
+  },
+  "author": {
+    "email": "ls.duchemin@gmail.com",
+    "name": "Louis Duchemin",
+    "url": "https://github.com/lsdch"
+  },
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/types/index.d.ts",
