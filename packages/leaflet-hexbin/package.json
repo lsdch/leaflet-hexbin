@@ -1,0 +1,52 @@
+{
+  "name": "leaflet-hexbin",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test:unit": "vitest",
+    "build-only": "vite build",
+    "type-check": "tsc --build",
+    "lint": "eslint . --fix",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "d3": "^7.9.0",
+    "d3-hexbin": "^0.2.2",
+    "leaflet": "^1.9.4"
+  },
+  "peerDependencies": {
+    "geojson": "^0.5.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.0",
+    "@types/d3": "^7.4.3",
+    "@types/d3-hexbin": "^0.2.5",
+    "@types/jsdom": "^21.1.7",
+    "@types/leaflet": "^1.9.16",
+    "@types/node": "^22.10.7",
+    "@vitest/eslint-plugin": "1.1.25",
+    "eslint": "^9.18.0",
+    "jiti": "^2.4.2",
+    "jsdom": "^26.0.0",
+    "npm-run-all2": "^7.0.2",
+    "typescript": "~5.7.3",
+    "vite-plugin-dts": "^4.5.0"
+  }
+}
