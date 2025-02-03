@@ -14,9 +14,7 @@
     </v-main>
   </v-app>
 </template>
-<script setup lang="ts">
-import 'leaflet/dist/leaflet.css'
-</script>
+<script setup lang="ts"></script>
 
 <style>
 .main-wrapper {

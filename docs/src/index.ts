@@ -1,3 +1,5 @@
+import 'leaflet/dist/leaflet.css'
+
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
