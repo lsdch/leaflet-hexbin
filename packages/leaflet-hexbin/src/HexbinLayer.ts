@@ -1,4 +1,4 @@
-import { scaleLinear, dispatch, select, extent, Selection } from 'd3';
+import { scaleLinear, dispatch, select, extent } from 'd3';
 import { hexbin, type HexbinBin } from 'd3-hexbin';
 import * as L from 'leaflet';
 import HexbinHoverHandler from './HexbinHoverHandler';
@@ -321,19 +321,20 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     bins: HexbinBin<HexbinData>[],
     valueFn: (d: HexbinBin<HexbinData>) => number,
     scaleExtent: [number, number | undefined]
-  ) {
+  ): [number, number] {
 
     // Determine the extent of the values
     let ext = extent<HexbinBin<HexbinData>, number>(bins, valueFn.bind(this));
     // If either's null, initialize them to 0
-    if (undefined == ext[0]) ext[0] = 0;
-    if (null == ext[1]) ext[1] = 0;
+    if (ext[0] === undefined || ext[1] === undefined) {
+      ext = [0, 0]
+    }
 
     // Now apply the optional clipping of the extent
-    if (null != scaleExtent[0]) ext[0] = scaleExtent[0];
-    if (null != scaleExtent[1]) ext[1] = scaleExtent[1];
+    if (undefined != scaleExtent[0]) ext[0] = scaleExtent[0];
+    if (undefined != scaleExtent[1]) ext[1] = scaleExtent[1];
 
-    return ext
+    return ext as [number, number]
   }
 
   // ------------------------------------
@@ -505,7 +506,6 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
       return L.latLng(that._fn.lat(d), that._fn.lng(d));
     });
   }
-
   /*
    * Get path geometry as GeoJSON
    */
