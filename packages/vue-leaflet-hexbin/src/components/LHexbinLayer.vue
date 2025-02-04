@@ -4,8 +4,7 @@
 
 <script setup lang="ts">
 import { Functions, InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
-import * as L from 'leaflet'
-import 'leaflet-hexbin'
+import { type HexbinLayer, type HexbinData } from 'leaflet-hexbin'
 
 import {
   markRaw,
@@ -21,7 +20,7 @@ import {
 
 import { hexbinLayerProps, setupHexbinLayer } from '../hexbinLayerHelpers'
 
-const { propsBinder, assertInject } = Utilities
+const { propsBinder, assertInject, WINDOW_OR_GLOBAL } = Utilities
 const { render } = Functions.Layer
 
 type HexbinEvents = {
@@ -30,7 +29,7 @@ type HexbinEvents = {
   click: [d: MouseEvent, i: HexbinData[]]
 }
 type Events = {
-  ready: [payload: L.HexbinLayer]
+  ready: [payload: HexbinLayer]
 } & HexbinEvents
 
 const props = defineProps(hexbinLayerProps)
@@ -41,20 +40,9 @@ const slots = useSlots()
 const emit = defineEmits<Events>()
 const context: SetupContext = { attrs, slots, emit: emit as EmitFn, expose: () => {} }
 
-type HexbinData = {
-  /**
-   * Coordinates in the format `[latitude, longitude]`
-   */
-  o: [number, number]
-  /**
-   * `[x,y]` coordinates of the hexbin
-   */
-  point: [number, number]
-}
-
 const hexEvents = ['mouseover', 'mouseout', 'click'] as const
 
-const leafletObject = ref<L.HexbinLayer>()
+const leafletObject = ref<HexbinLayer>()
 const ready = ref(false)
 
 const addLayer = assertInject(InjectionKeys.AddLayerInjection)
@@ -62,7 +50,7 @@ const addLayer = assertInject(InjectionKeys.AddLayerInjection)
 const { methods, options } = setupHexbinLayer(props, leafletObject, context)
 
 onMounted(async () => {
-  leafletObject.value = markRaw(L.hexbinLayer(options))
+  leafletObject.value = markRaw(WINDOW_OR_GLOBAL.L.hexbinLayer(options))
   leafletObject.value.data(props.data ?? [])
 
   watch(
