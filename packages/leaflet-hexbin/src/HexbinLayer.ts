@@ -1,4 +1,4 @@
-import { scaleLinear, dispatch, select, extent } from 'd3';
+import { scaleLinear, dispatch, select, extent, Selection } from 'd3';
 import { hexbin, type HexbinBin } from 'd3-hexbin';
 import * as L from 'leaflet';
 import HexbinHoverHandler from './HexbinHoverHandler';
@@ -141,8 +141,6 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
   * @param map Reference to the map from which this layer is being removed
   */
   onRemove(map: L.Map): this {
-    // L.SVG.prototype.onRemove.call(this, map);
-    // super.onRemove(map);
     // Destroy the svg container
     this._destroyContainer();
     // Remove events
@@ -196,46 +194,37 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
   _linearlySpace(from: number, to: number, length: number): number[] {
     const step = (to - from) / Math.max(length - 1, 1);
     return Array.from({ length }, (_, i) => from + (i * step));
-
-    // const arr = new Array(length);
-    // var step = (to - from) / Math.max(length - 1, 1);
-
-    // for (var i = 0; i < length; ++i) {
-    //   arr[i] = from + (i * step);
-    // }
-
-    // return arr;
   }
 
   _createHexagons(g: d3.Selection<SVGGElement, number, SVGGElement, unknown>, data: HexbinData[]) {
-    const that = this;
+    const thisLayer = this;
 
     // Create the bins using the hexbin layout
 
     // Generate the map bounds (to be used to filter the hexes to what is visible)
-    const size = that._map.getSize();
-    const bounds = that._map.getBounds().pad(that.options.radius * 2 / Math.max(size.x, size.y));
+    const size = thisLayer._map.getSize();
+    const bounds = thisLayer._map.getBounds().pad(thisLayer.options.radius * 2 / Math.max(size.x, size.y));
 
-    const bins = that._hexLayout(data).filter(
-      ({ x, y }) => bounds.contains(that._map.layerPointToLatLng(L.point(x, y)))
+    const bins = thisLayer._hexLayout(data).filter(
+      ({ x, y }) => bounds.contains(thisLayer._map.layerPointToLatLng(L.point(x, y)))
     );
 
     // Derive the extents of the data values for each dimension
-    const colorExtent = that._getExtent(bins, that._fn.colorValue, that.options.colorScaleExtent);
-    const radiusExtent = that._getExtent(bins, that._fn.radiusValue, that.options.radiusScaleExtent);
+    const colorExtent = thisLayer._getExtent(bins, thisLayer._fn.colorValue, thisLayer.options.colorScaleExtent);
+    const radiusExtent = thisLayer._getExtent(bins, thisLayer._fn.radiusValue, thisLayer.options.radiusScaleExtent);
 
     // Match the domain cardinality to that of the color range, to allow for a polylinear scale
     const colorDomain = this.options.colorDomain
-      ?? that._linearlySpace(
+      ?? thisLayer._linearlySpace(
         colorExtent[0],
         colorExtent[1],
-        that._scale.color.range().length
+        thisLayer._scale.color.range().length
       );
     const radiusDomain = this.options.radiusDomain || radiusExtent;
 
     // Set the scale domains
-    that._scale.color.domain(colorDomain);
-    that._scale.radius.domain(radiusDomain);
+    thisLayer._scale.color.domain(colorDomain);
+    thisLayer._scale.radius.domain(radiusDomain);
 
 
     /*
@@ -243,9 +232,6 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
      *    Join the Hexagons to the data
      *    Use a deterministic id for tracking bins based on position
      */
-    // bins = bins.filter(function (d) {
-    //   return bounds.contains(that._map.layerPointToLatLng(L.point(d.x, d.y)));
-    // });
     const join = g.selectAll<SVGGElement, HexbinBin<HexbinData>>('g.hexbin-container')
       .data(bins, ({ x, y }) => `${x}:${y}`);
 
@@ -256,12 +242,13 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
      *    opacity is re-applied in case the enter transition was cancelled
      *    the path is applied as well to resize the bins
      */
-    join.select<SVGPathElement>('path.hexbin-hexagon').transition().duration(that.options.duration)
-      .attr('fill', that._fn.fill.bind(that))
-      .attr('fill-opacity', that.options.opacity)
-      .attr('stroke-opacity', that.options.opacity)
+    join.select<SVGPathElement>('path.hexbin-hexagon')
+      .transition().duration(thisLayer.options.duration)
+      .attr('fill', thisLayer._fn.fill.bind(thisLayer))
+      .attr('fill-opacity', thisLayer.options.opacity)
+      .attr('stroke-opacity', thisLayer.options.opacity)
       .attr('d', (d) => {
-        return that._hexLayout.hexagon(that._scale.radius(that._fn.radiusValue.call(that, d)));
+        return thisLayer._hexLayout.hexagon(thisLayer._scale.radius(thisLayer._fn.radiusValue.call(thisLayer, d)));
       });
 
 
@@ -270,48 +257,50 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
      *    Establish the path, size, fill, and the initial opacity
      *    Transition to the final opacity and size
      */
-    const enter = join.enter().append('g').attr('class', 'hexbin-container')
-      .style('pointer-events', that.options.pointerEvents);
+    const container = join.enter().append('g').attr('class', 'hexbin-container')
+      .style('pointer-events', thisLayer.options.pointerEvents);
 
-    const hexagons = enter.append('path').attr('class', 'hexbin-hexagon')
+
+    container.on('mouseover', function (this: SVGGElement, d: MouseEvent, i) {
+      // Bring container to foreground by re-appending it to the DOM
+      const c = select<SVGGElement, HexbinBin<HexbinData>>(this).raise();
+    })
+
+    const hexagons = container.append('path').attr('class', 'hexbin-hexagon')
       .attr('transform', ({ x, y }) => `translate(${x},${y})`)
-      .attr('d', () => that._hexLayout.hexagon(that._scale.radius.range()[0]))
-      .attr('fill', that._fn.fill.bind(that))
+      .attr('d', () => thisLayer._hexLayout.hexagon(thisLayer._scale.radius.range()[0]))
+      .attr('fill', thisLayer._fn.fill.bind(thisLayer))
       .attr('fill-opacity', 0.01)
       .attr('stroke-opacity', 0.01)
       .style('pointer-events', 'all');
 
-    hexagons.transition().duration(that.options.duration)
-      .attr('fill-opacity', that.options.opacity)
-      .attr('stroke-opacity', that.options.opacity)
-      .attr('d', (d) => that._hexLayout.hexagon(that._scale.radius(that._fn.radiusValue.call(that, d))))
+    hexagons.transition().duration(thisLayer.options.duration)
+      .attr('fill-opacity', thisLayer.options.opacity)
+      .attr('stroke-opacity', thisLayer.options.opacity)
+      .attr('d', (d) => thisLayer._hexLayout.hexagon(thisLayer._scale.radius(thisLayer._fn.radiusValue.call(thisLayer, d))))
       .style('pointer-events', 'all');
-    // .style('pointer-events', that.options.pointerEvents);
 
     // Grid
-    const gridEnter = enter.append('path').attr('class', 'hexbin-grid')
+    const gridEnter = container.append('path').attr('class', 'hexbin-grid')
       .attr('transform', ({ x, y }) => `translate(${x},${y})`)
-      .attr('d', () => that._hexLayout.hexagon(that.options.radius))
+      .attr('d', () => thisLayer._hexLayout.hexagon(thisLayer.options.radius))
       .attr('fill', 'none')
       .attr('stroke', 'none')
-    // .style('pointer-events', that.options.pointerEvents);
 
 
     // Grid enter-update
-    // gridEnter(join.select('path.hexbin-hexagon'))
-    hexagons
-      // join
-      .on('mouseover', function (this: SVGPathElement, d: MouseEvent, i) {
-        this.parentElement!.parentElement!.appendChild(this.parentElement!);
-        that._hoverHandler.mouseover(this, that as L.HexbinLayer, d, i);
-        that._dispatch.call('mouseover', this, d, i);
-      })
+    hexagons.on('mouseover', function (this: SVGPathElement, d: MouseEvent, i) {
+      thisLayer._hoverHandler.mouseover(this, thisLayer as L.HexbinLayer, d, i);
+      thisLayer._dispatch.call('mouseover', this, d, i);
+      this.classList.add('hover')
+    })
       .on('mouseout', function (this: SVGPathElement, d: MouseEvent, i) {
-        that._hoverHandler.mouseout(this, that as L.HexbinLayer, d, i);
-        that._dispatch.call('mouseout', this, that as L.HexbinLayer, d, i);
+        thisLayer._hoverHandler.mouseout(this, thisLayer as L.HexbinLayer, d, i);
+        thisLayer._dispatch.call('mouseout', this, thisLayer as L.HexbinLayer, d, i);
+        this.classList.remove('hover')
       })
       .on('click', function (this, d, i) {
-        that._dispatch.call('click', this, that as L.HexbinLayer, d, i);
+        thisLayer._dispatch.call('click', this, thisLayer as L.HexbinLayer, d, i);
       });
 
 
@@ -319,15 +308,14 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     const exit = join.exit();
 
     exit.select('path.hexbin-hexagon')
-      .transition().duration(that.options.duration)
+      .transition().duration(thisLayer.options.duration)
       .attr('fill-opacity', 0)
       .attr('stroke-opacity', 0)
-      .attr('d', (d) => that._hexLayout.hexagon(0));
+      .attr('d', (d) => thisLayer._hexLayout.hexagon(0));
 
-    exit.transition().duration(that.options.duration).remove();
+    exit.transition().duration(thisLayer.options.duration).remove();
 
   }
-
 
   _getExtent(
     bins: HexbinBin<HexbinData>[],
@@ -337,12 +325,9 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
 
     // Determine the extent of the values
     let ext = extent<HexbinBin<HexbinData>, number>(bins, valueFn.bind(this));
-    if (ext[0] === undefined || ext[1] === undefined) {
-      ext = [0, 0]
-    }
     // If either's null, initialize them to 0
-    // if (undefined == extent[0]) extent[0] = 0;
-    // if (null == extent[1]) extent[1] = 0;
+    if (undefined == ext[0]) ext[0] = 0;
+    if (null == ext[1]) ext[1] = 0;
 
     // Now apply the optional clipping of the extent
     if (null != scaleExtent[0]) ext[0] = scaleExtent[0];

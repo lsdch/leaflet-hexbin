@@ -12,7 +12,6 @@
         :radius-range="[2, 12]"
         :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
         @click="(d, i) => console.log('click', d, i)"
-        @mouseover="(d, i) => probe()"
         @ready="(v) => console.log('ready')"
         :hover-handler="
           HexbinHoverHandler.compound([
@@ -36,11 +35,6 @@
 import { LMap, LTileLayer } from '@vue-leaflet/vue-leaflet'
 import data from '../data/points_10k'
 import { LHexbinLayer, HexbinHoverHandler } from 'vue-leaflet-hexbin'
-import L from 'leaflet'
-
-function probe() {
-  console.log(document.querySelector(':hover'))
-}
 </script>
 
 <style lang="scss">
@@ -48,7 +42,7 @@ function probe() {
   cursor: pointer;
 }
 .hexbin-container {
-  .hexbin-hexagon:hover {
+  .hexbin-hexagon.hover {
     fill-opacity: 1;
     fill: red;
     background-color: red;
