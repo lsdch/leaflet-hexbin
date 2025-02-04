@@ -13,12 +13,21 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'leaflet-hexbin': fileURLToPath(
+        new URL('../packages/leaflet-hexbin/src', import.meta.url),
+      ),
+      'vue-leaflet-hexbin': fileURLToPath(
+        new URL('../packages/vue-leaflet-hexbin/src', import.meta.url),
+      ),
     },
   },
+  optimizeDeps: {
+    include: ["leaflet"], // Ensure Leaflet is bundled
+  },
   build: {
-
     // manifest: true,
+    sourcemap: true,
     rollupOptions: {
       output: {
         globals: {

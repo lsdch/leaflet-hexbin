@@ -13,7 +13,13 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ]
+      ],
+      "leaflet-hexbin": [
+        "../packages/leaflet-hexbin/src/index.ts"
+      ],
+      "vue-leaflet-hexbin": [
+        "../packages/vue-leaflet-hexbin/src/index.ts"
+      ],
     },
   }
 }

@@ -17,7 +17,8 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'leaflet-hexbin': fileURLToPath(new URL('../leaflet-hexbin/src', import.meta.url)),
     },
   },
   build: {
