@@ -11,9 +11,11 @@ declare module 'leaflet' {
   function hexbinLayer(config?: HexbinLayerConfig): HexbinLayer;
 }
 
-(L as any).HexbinLayer = CHexbinLayer;
-(L as any).HexbinHoverHandler = HexbinHoverHandler;
-(L as any).hexbinLayer = hexbinLayer
+Object.assign(L, {
+  HexbinLayer: CHexbinLayer,
+  HexbinHoverHandler,
+  hexbinLayer
+})
 
 
 export {
