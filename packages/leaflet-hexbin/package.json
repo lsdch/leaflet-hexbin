@@ -6,9 +6,6 @@
   "license": "MIT",
   "description": "Leaflet plugin to create hexbin layers",
   "homepage": "https://lsdch.github.io/leaflet-hexbin/",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "repository": "git://github.com/lsdch/leaflet-hexbin.git",
   "bugs": {
     "url": "https://github.com/lsdch/leaflet-hexbin/issues"
