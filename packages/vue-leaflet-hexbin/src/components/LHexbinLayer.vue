@@ -18,7 +18,7 @@ import {
   type SetupContext,
 } from 'vue'
 
-import { hexbinLayerProps, setupHexbinLayer } from '../hexbinLayerHelpers'
+import { hexbinLayerProps, setupHexbinLayer } from '../hexbinLayer'
 
 const { propsBinder, assertInject, WINDOW_OR_GLOBAL } = Utilities
 const { render } = Functions.Layer
