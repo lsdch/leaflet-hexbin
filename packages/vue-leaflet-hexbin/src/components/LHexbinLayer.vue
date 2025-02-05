@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import { Functions, InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
-import { type HexbinLayer, type HexbinData } from 'leaflet-hexbin'
+import { type HexbinLayer, type HexbinData, hexbinLayer } from 'leaflet-hexbin'
 
 import {
   markRaw,
@@ -50,7 +50,7 @@ const addLayer = assertInject(InjectionKeys.AddLayerInjection)
 const { methods, options } = setupHexbinLayer(props, leafletObject, context)
 
 onMounted(async () => {
-  leafletObject.value = markRaw(WINDOW_OR_GLOBAL.L.hexbinLayer(options))
+  leafletObject.value = markRaw(hexbinLayer(options))
   leafletObject.value.data(props.data ?? [])
 
   watch(

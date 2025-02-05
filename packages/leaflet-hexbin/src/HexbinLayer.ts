@@ -96,7 +96,7 @@ export type HexbinData = {
  * Instantiate a hexbin layer.
  * Extends L.SVG to take advantage of built-in zoom animations.
  */
-export class HexbinLayer extends L.SVG implements L.HexbinLayer {
+export class HexbinLayer extends L.SVG implements HexbinLayer {
   options: Required<HexbinLayerConfig> & L.RendererOptions = {
     radius: 12,
     opacity: 0.6,
@@ -363,17 +363,17 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
 
     // Grid enter-update
     hexagons.on('mouseover', function (this: SVGPathElement, d: MouseEvent, i) {
-      thisLayer._hoverHandler.mouseover(this, thisLayer as L.HexbinLayer, d, i);
+      thisLayer._hoverHandler.mouseover(this, thisLayer as HexbinLayer, d, i);
       thisLayer._dispatch.call('mouseover', this, d, i);
       this.classList.add('hover')
     })
       .on('mouseout', function (this: SVGPathElement, d: MouseEvent, i) {
-        thisLayer._hoverHandler.mouseout(this, thisLayer as L.HexbinLayer, d, i);
-        thisLayer._dispatch.call('mouseout', this, thisLayer as L.HexbinLayer, d, i);
+        thisLayer._hoverHandler.mouseout(this, thisLayer as HexbinLayer, d, i);
+        thisLayer._dispatch.call('mouseout', this, thisLayer as HexbinLayer, d, i);
         this.classList.remove('hover')
       })
       .on('click', function (this, d, i) {
-        thisLayer._dispatch.call('click', this, thisLayer as L.HexbinLayer, d, i);
+        thisLayer._dispatch.call('click', this, thisLayer as HexbinLayer, d, i);
       });
 
 
