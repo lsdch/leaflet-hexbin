@@ -402,6 +402,10 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     this.options.radius = v;
     this._hexLayout.radius(v);
 
+    if (null == this.options.radiusRange) {
+      this._scale.radius.range([this.options.radius, this.options.radius]).clamp(true);
+    }
+
     return this;
   }
 
@@ -455,8 +459,8 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
   radiusRange(v: [number, number]): this;
   radiusRange(v?: [number, number]): this | [number, number] {
     if (v === undefined) { return this.options.radiusRange; }
-    this.options.radiusRange = v ?? [this.options.radius, this.options.radius];
-    this._scale.radius.range(this.options.radiusRange).clamp(true);
+    this.options.radiusRange = v;
+    this._scale.radius.range(this.options.radiusRange ?? [this.options.radius, this.options.radius]).clamp(true);
 
     return this;
   }
