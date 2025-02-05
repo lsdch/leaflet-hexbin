@@ -4,4 +4,5 @@
 'vue-leaflet-hexbin': patch
 ---
 
-Fix leaflet integration and hover behavior
+- Fix leaflet integration
+- Fix hover behavior
