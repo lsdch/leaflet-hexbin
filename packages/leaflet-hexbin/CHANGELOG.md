@@ -1,5 +1,11 @@
 # leaflet-hexbin
 
+## 0.0.5
+
+### Patch Changes
+
+- [`55f8316`](https://github.com/lsdch/leaflet-hexbin/commit/55f831647e4b95ac02f56da01a378d76dd7012db) Thanks [@lsdch](https://github.com/lsdch)! - Fix radius range option
+
 ## 0.0.4
 
 ### Patch Changes
