@@ -1,5 +1,11 @@
 # leaflet-hexbin
 
+## 0.0.3
+
+### Patch Changes
+
+- [`14da2a7`](https://github.com/lsdch/leaflet-hexbin/commit/14da2a7da85356f474a39e7462e1ae73c40a920e) Thanks [@lsdch](https://github.com/lsdch)! - Improve handling of radius and opacity scales
+
 ## 0.0.2
 
 ### Patch Changes
