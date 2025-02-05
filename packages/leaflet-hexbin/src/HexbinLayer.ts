@@ -12,21 +12,73 @@ declare module 'leaflet' {
 }
 
 export interface HexbinLayerConfig {
+  /**
+   * Hex grid cell radius in pixels.
+   * This value should be a positive number.
+   * This radius controls the radius of the hexagons used to bin the data
+   * but not necessarily to draw each individual hexbin.
+   * @default 12
+   */
   radius?: number,
+  /**
+   * Sets the opacity on the hexbin layer.
+   * @default 0.6
+   */
   opacity?: number,
+  /**
+   * Duration of transition in milliseconds.
+   * @default 200
+   */
   duration?: number,
 
+  /**
+   * Color scale extent: [min, max] scale factor for color interpolation.
+   * @default [1, undefined]
+   */
   colorScaleExtent?: [number, number | undefined],
+  /**
+   * This is used to override the default behavior, which is to derive the color domain from the data.
+   * Normally, you can tweak the generation of the color domain using the colorScaleExtent option.
+   * However, if you want to set a completely custom domain, you can provide it as an array of values with this option.
+   * The array of values will be passed directly into the domain of the color scale before rendering.
+   * @default null
+   */
   colorDomain?: number[] | null
+  /**
+   * Color range used to fill the hexbins.
+   * @default ['#f7fbff', '#08306b']
+   */
   colorRange?: string[],
 
+  /**
+   * Radius scale extent: [min, max] scale factor for radius interpolation.
+   * @default [1, undefined]
+   */
   radiusScaleExtent?: [number, number | undefined],
+  /**
+   * This is used to override the default behavior, which is to derive the radius domain from the data.
+   * Normally, you can tweak the generation of the radius domain using the radiusScaleExtent option.
+   * However, if you want to set a completely custom domain, you can provide it as an array of values with this option.
+   * The array of values will be passed directly into the domain of the radius scale before rendering.
+   * @default null
+   */
   radiusDomain?: number[] | null
+  /**
+   * Sets the range of the radius scale used to size the hexbins.
+   * @default [4, 12]
+   */
   radiusRange?: [number, number],
 
+  /**
+   * You should only modify this config option if you want to change the mouse event behavior on hexbins. This will modify when the events are propagated based on the visibility state and/or part of the hexbin being hovered.
+   * @default 'all'
+   */
   pointerEvents?: string
 }
 
+/**
+ * Hexbin data attached to each hexagon, once binned.
+ */
 export type HexbinData = {
   o: L.LatLngExpression;
   point: Readonly<[number, number]>;
@@ -34,8 +86,8 @@ export type HexbinData = {
 
 
 /**
- * L is defined by the Leaflet library, see git://github.com/Leaflet/Leaflet.git for documentation
- * We extend L.SVG to take advantage of built-in zoom animations.
+ * Instantiate a hexbin layer.
+ * Extends L.SVG to take advantage of built-in zoom animations.
  */
 export class HexbinLayer extends L.SVG implements L.HexbinLayer {
   options: Required<HexbinLayerConfig> & L.RendererOptions = {
@@ -60,7 +112,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     lng: (d: L.LatLngExpression) => L.latLng(d).lng,
     lat: (d: L.LatLngExpression) => L.latLng(d).lat,
     colorValue: (d: HexbinData[]) => d.length,
-    radiusValue: (d: HexbinData[]) => Number.MAX_VALUE,
+    radiusValue: (d: HexbinData[]) => d.length,
     fill: (d: HexbinData[]) => {
       const val = this._fn.colorValue(d);
       return (null != val) ? this._scale.color(val) : 'none';
@@ -269,6 +321,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     const hexagons = container.append('path').attr('class', 'hexbin-hexagon')
       .attr('transform', ({ x, y }) => `translate(${x},${y})`)
       .attr('d', () => thisLayer._hexLayout.hexagon(thisLayer._scale.radius.range()[0]))
+      // .attr('d', (data, length) => thisLayer._hexLayout.hexagon(thisLayer._scale.radius(data.length)))
       .attr('fill', thisLayer._fn.fill.bind(thisLayer))
       .attr('fill-opacity', 0.01)
       .attr('stroke-opacity', 0.01)
@@ -403,7 +456,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
   radiusRange(v?: [number, number]): this | [number, number] {
     if (v === undefined) { return this.options.radiusRange; }
     this.options.radiusRange = v;
-    this._scale.radius.range(v);
+    this._scale.radius.range(v).clamp(true);
 
     return this;
   }
@@ -517,6 +570,9 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
   }
 }
 
+/**
+ * Factory function to instanciate a new hexbin layer
+ */
 export function hexbinLayer(options?: HexbinLayerConfig) {
   return new HexbinLayer(options);
 }
