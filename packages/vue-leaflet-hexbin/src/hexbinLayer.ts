@@ -36,10 +36,15 @@ export const hexbinLayerProps = {
    * Opacity of the layer.
    */
   opacity: {
-    type: Number,
-    validator(value: number) {
-      return value >= 0 && value <= 1
+    type: [Number, Array] as PropType<number | [number, number]>,
+    validator(value: number | [number, number]) {
+      if (typeof value === 'number') {
+        return value >= 0 && value <= 1
+      } else {
+        return value[0] >= 0 && value[0] <= 1 && value[1] >= 0 && value[1] <= 1
+      }
     },
+    default: 0.6
   },
   /**
    * Duration of transition in milliseconds.
@@ -51,16 +56,23 @@ export const hexbinLayerProps = {
     }
   },
   /**
-   * Color scale extent: [min, max] scale factor for color interpolation.
+   * Color scale extent: [min, max].
    */
   colorScaleExtent: {
     type: Array as unknown as PropType<[number, number]>,
     default: [1, undefined]
   },
   /**
-   * Radius scale extent: [min, max] scale factor for radius interpolation.
+   * Radius scale extent: [min, max].
    */
   radiusScaleExtent: {
+    type: Array as unknown as PropType<[number, number]>,
+    default: [1, undefined]
+  },
+  /**
+   * Opacity scale extent: [min, max].
+   */
+  opacityScaleExtent: {
     type: Array as unknown as PropType<[number, number]>,
     default: [1, undefined]
   },
@@ -125,7 +137,7 @@ export const setupHexbinLayer = <Events = unknown>(
     setDuration(duration: number) {
       leafletRef.value?.duration(duration)
     },
-    setOpacity(opacity: number) {
+    setOpacity(opacity: number | [number, number]) {
       leafletRef.value?.opacity(opacity)
     },
     setColorScaleExtent(extent: [number, number]) {

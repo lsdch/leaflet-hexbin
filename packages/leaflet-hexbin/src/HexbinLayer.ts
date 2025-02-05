@@ -22,9 +22,16 @@ export interface HexbinLayerConfig {
   radius?: number,
   /**
    * Sets the opacity on the hexbin layer.
+   * This value should be a number between 0 and 1.
+   * If an array is provided, the first element is the minimum opacity and the second is the maximum.
    * @default 0.6
    */
-  opacity?: number,
+  opacity?: number | [number, number],
+  /**
+   *  Opacity scale extent: [min, max] domain for opacity interpolation.
+   *  @default [1, undefined]
+   */
+  opacityScaleExtent?: [number, number | undefined],
   /**
    * Duration of transition in milliseconds.
    * @default 200
@@ -32,7 +39,7 @@ export interface HexbinLayerConfig {
   duration?: number,
 
   /**
-   * Color scale extent: [min, max] scale factor for color interpolation.
+   * Color scale extent: [min, max] domain for color interpolation.
    * @default [1, undefined]
    */
   colorScaleExtent?: [number, number | undefined],
@@ -51,7 +58,7 @@ export interface HexbinLayerConfig {
   colorRange?: string[],
 
   /**
-   * Radius scale extent: [min, max] scale factor for radius interpolation.
+   * Radius scale extent: [min, max] domain for radius interpolation.
    * @default [1, undefined]
    */
   radiusScaleExtent?: [number, number | undefined],
@@ -97,6 +104,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
 
     colorScaleExtent: [1, undefined],
     radiusScaleExtent: [1, undefined],
+    opacityScaleExtent: [1, undefined],
     colorDomain: null,
     radiusDomain: null,
     colorRange: ['#f7fbff', '#08306b'],
@@ -113,6 +121,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     lat: (d: L.LatLngExpression) => L.latLng(d).lat,
     colorValue: (d: HexbinData[]) => d.length,
     radiusValue: (d: HexbinData[]) => d.length,
+    opacityValue: (d: HexbinData[]) => d.length,
     fill: (d: HexbinData[]) => {
       const val = this._fn.colorValue(d);
       return (null != val) ? this._scale.color(val) : 'none';
@@ -121,7 +130,8 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
   // Set up the customizable scale
   _scale = {
     color: scaleLinear<string, string>(),
-    radius: scaleLinear()
+    radius: scaleLinear(),
+    opacity: scaleLinear()
   };
 
   // Set up the Dispatcher for managing events and callbacks
@@ -156,6 +166,14 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     this._scale.radius
       .range(this.options.radiusRange ?? [this.options.radius, this.options.radius])
       .clamp(true);
+
+    this._scale.opacity
+      .range(
+        typeof this.options.opacity === 'number'
+          ? [this.options.opacity, this.options.opacity]
+          : this.options.opacity
+      ).clamp(true);
+
   };
 
   /**
@@ -264,6 +282,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     // Derive the extents of the data values for each dimension
     const colorExtent = thisLayer._getExtent(bins, thisLayer._fn.colorValue, thisLayer.options.colorScaleExtent);
     const radiusExtent = thisLayer._getExtent(bins, thisLayer._fn.radiusValue, thisLayer.options.radiusScaleExtent);
+    const opacityExtent = thisLayer._getExtent(bins, thisLayer._fn.opacityValue, thisLayer.options.opacityScaleExtent);
 
     // Match the domain cardinality to that of the color range, to allow for a polylinear scale
     const colorDomain = this.options.colorDomain
@@ -277,6 +296,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     // Set the scale domains
     thisLayer._scale.color.domain(colorDomain);
     thisLayer._scale.radius.domain(radiusDomain);
+    thisLayer._scale.opacity.domain(opacityExtent);
 
 
     /*
@@ -297,8 +317,8 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     join.select<SVGPathElement>('path.hexbin-hexagon')
       .transition().duration(thisLayer.options.duration)
       .attr('fill', thisLayer._fn.fill.bind(thisLayer))
-      .attr('fill-opacity', thisLayer.options.opacity)
-      .attr('stroke-opacity', thisLayer.options.opacity)
+      .attr('fill-opacity', (d) => thisLayer._scale.opacity(thisLayer._fn.opacityValue.call(thisLayer, d)))
+      .attr('stroke-opacity', (d) => thisLayer._scale.opacity(thisLayer._fn.opacityValue.call(thisLayer, d)))
       .attr('d', (d) => {
         return thisLayer._hexLayout.hexagon(thisLayer._scale.radius(thisLayer._fn.radiusValue.call(thisLayer, d)));
       });
@@ -328,8 +348,8 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
       .style('pointer-events', 'all');
 
     hexagons.transition().duration(thisLayer.options.duration)
-      .attr('fill-opacity', thisLayer.options.opacity)
-      .attr('stroke-opacity', thisLayer.options.opacity)
+      .attr('fill-opacity', (d) => thisLayer._scale.opacity(thisLayer._fn.opacityValue.call(thisLayer, d)))
+      .attr('stroke-opacity', (d) => thisLayer._scale.opacity(thisLayer._fn.opacityValue.call(thisLayer, d)))
       .attr('d', (d) => thisLayer._hexLayout.hexagon(thisLayer._scale.radius(thisLayer._fn.radiusValue.call(thisLayer, d))))
       .style('pointer-events', 'all');
 
@@ -409,11 +429,12 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     return this;
   }
 
-  opacity(): number;
-  opacity(v: number): this;
-  opacity(v?: number): this | number {
+  opacity(): number | [number, number];
+  opacity(v: number | [number, number]): this;
+  opacity(v?: number | [number, number]): this | number | [number, number] {
     if (v === undefined) return this.options.opacity
     this.options.opacity = v;
+    this._scale.opacity.range(typeof v === 'number' ? [v, v] : v).clamp(true);
 
     return this;
   }
@@ -444,6 +465,16 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
 
     return this;
   }
+
+  opacityScaleExtent(): [number, number | undefined];
+  opacityScaleExtent(v: [number, number | undefined]): this;
+  opacityScaleExtent(v?: [number, number | undefined]): this | [number, number | undefined] {
+    if (v === undefined) { return this.options.opacityScaleExtent; }
+    this.options.opacityScaleExtent = v;
+
+    return this;
+  }
+
 
   colorRange(): string[];
   colorRange(v: string[]): this;

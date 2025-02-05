@@ -8,9 +8,9 @@
       />
       <LHexbinLayer
         :data
-        :radius-range="useRadiusRange ? radiusRange : null"
         :radius
-        :opacity
+        :radius-range="useRadiusRange ? radiusRange : null"
+        :opacity="opacity.asRange ? opacity.range : opacity.value"
         :duration
         :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
         @click="(d, i) => console.log('click', d, i)"
@@ -34,37 +34,70 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-slider
-          label="Radius"
-          hint="Controls hex grid cell radius"
-          persistent-hint
-          v-model="radius"
-          :min="5"
-          :max="50"
-        ></v-slider>
+        <v-card title="Radius">
+          <template #append>
+            <v-switch
+              v-model="useRadiusRange"
+              color="primary"
+              label="Use range scale"
+              hide-details
+            />
+          </template>
+          <v-card-text>
+            <v-slider
+              label="Radius"
+              hint="Controls bin radius"
+              persistent-hint
+              v-model="radius"
+              :min="5"
+              :max="50"
+            />
+            <v-range-slider
+              label="Radius range"
+              hint="Scale hex radius with bin length"
+              persistent-hint
+              v-model="radiusRange"
+              :min="1"
+              :max="50"
+              :disabled="!useRadiusRange"
+            />
+          </v-card-text>
+        </v-card>
       </v-col>
       <v-col>
-        <v-range-slider
-          label="Radius range"
-          hint="Controls hex scale radius range"
-          persistent-hint
-          v-model="radiusRange"
-          :min="1"
-          :max="50"
-          :disabled="!useRadiusRange"
-        >
-        </v-range-slider>
-        <v-switch
-          v-model="useRadiusRange"
-          color="primary"
-          label="Use radius range"
-          hide-details
-        ></v-switch>
+        <v-card title="Opacity">
+          <template #append>
+            <v-switch
+              v-model="opacity.asRange"
+              color="primary"
+              label="Use opacity scale"
+              hide-details
+            />
+          </template>
+          <v-card-text>
+            <v-range-slider
+              v-if="opacity.asRange"
+              v-model="opacity.range"
+              label="Opacity"
+              :min="0"
+              :max="1"
+              :step="0.05"
+            ></v-range-slider>
+            <v-slider
+              v-else
+              v-model="opacity.value"
+              label="Opacity"
+              :min="0"
+              :max="1"
+              :step="0.05"
+              thumb-label
+            ></v-slider>
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <v-slider v-model="opacity" label="Opacity" :min="0" :max="1" :step="0.05"></v-slider>
         <v-slider
           v-model="duration"
           label="Transition duration (ms)"
@@ -85,7 +118,11 @@ import { LHexbinLayer, HexbinHoverHandler } from 'vue-leaflet-hexbin'
 import { ref } from 'vue'
 
 const radius = ref(12)
-const opacity = ref(1)
+const opacity = ref({
+  value: 1,
+  range: [0.5, 1] as [number, number],
+  asRange: false,
+})
 const radiusRange = ref<[number, number]>([4, 12])
 const useRadiusRange = ref(false)
 const duration = ref(200)
