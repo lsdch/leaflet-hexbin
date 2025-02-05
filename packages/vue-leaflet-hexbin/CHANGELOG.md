@@ -1,5 +1,12 @@
 # vue-leaflet-hexbin
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [[`55f8316`](https://github.com/lsdch/leaflet-hexbin/commit/55f831647e4b95ac02f56da01a378d76dd7012db)]:
+  - leaflet-hexbin@0.0.5
+
 ## 0.0.4
 
 ### Patch Changes
