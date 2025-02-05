@@ -48,4 +48,4 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Deploy docs
-        run: cd docs && pnpm deploy
+        run: cd docs && pnpm run deploy
