@@ -11,6 +11,7 @@
         :radius-range="useRadiusRange ? radiusRange : null"
         :radius
         :opacity
+        :duration
         :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
         @click="(d, i) => console.log('click', d, i)"
         @ready="(v) => console.log('ready')"
@@ -63,15 +64,15 @@
     </v-row>
     <v-row>
       <v-col>
+        <v-slider v-model="opacity" label="Opacity" :min="0" :max="1" :step="0.05"></v-slider>
         <v-slider
-          v-model="opacity"
-          label="Opacity"
-          hint="Hex opacity"
-          persistent-hint
+          v-model="duration"
+          label="Transition duration (ms)"
           :min="0"
-          :max="1"
-          :step="0.05"
-        ></v-slider>
+          :max="2000"
+          thumb-label
+        >
+        </v-slider>
       </v-col>
     </v-row>
   </v-container>
@@ -87,6 +88,7 @@ const radius = ref(12)
 const opacity = ref(1)
 const radiusRange = ref<[number, number]>([4, 12])
 const useRadiusRange = ref(false)
+const duration = ref(200)
 </script>
 
 <style lang="scss">
