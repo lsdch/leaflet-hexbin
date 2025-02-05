@@ -1,5 +1,15 @@
 # leaflet-hexbin-docs
 
+## 0.0.6
+
+### Patch Changes
+
+- [`d2e0dd7`](https://github.com/lsdch/leaflet-hexbin/commit/d2e0dd7637dd8d47c2b8de9ecc56ac42b6b6aea0) Thanks [@lsdch](https://github.com/lsdch)! - Support generic data types
+
+- Updated dependencies [[`d2e0dd7`](https://github.com/lsdch/leaflet-hexbin/commit/d2e0dd7637dd8d47c2b8de9ecc56ac42b6b6aea0)]:
+  - vue-leaflet-hexbin@0.0.6
+  - leaflet-hexbin@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes
