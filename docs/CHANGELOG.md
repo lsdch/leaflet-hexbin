@@ -1,5 +1,18 @@
 # leaflet-hexbin-docs
 
+## 0.0.4
+
+### Patch Changes
+
+- [`48c08e1`](https://github.com/lsdch/leaflet-hexbin/commit/48c08e1324ce67b7ce1392651895b029b47a2ce9) Thanks [@lsdch](https://github.com/lsdch)! - Give up on extending global leaflet object
+
+  - this pattern is **SO BAD**
+  - nothing wrong with importing layer constructor directly from leaflet-hexbin
+
+- Updated dependencies [[`48c08e1`](https://github.com/lsdch/leaflet-hexbin/commit/48c08e1324ce67b7ce1392651895b029b47a2ce9)]:
+  - vue-leaflet-hexbin@0.0.4
+  - leaflet-hexbin@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes
