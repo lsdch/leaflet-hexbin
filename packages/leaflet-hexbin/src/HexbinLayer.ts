@@ -65,9 +65,9 @@ export interface HexbinLayerConfig {
   radiusDomain?: number[] | null
   /**
    * Sets the range of the radius scale used to size the hexbins.
-   * @default [4, 12]
+   * @default hex grid cell radius
    */
-  radiusRange?: [number, number],
+  radiusRange?: [number, number] | null,
 
   /**
    * You should only modify this config option if you want to change the mouse event behavior on hexbins. This will modify when the events are propagated based on the visibility state and/or part of the hexbin being hovered.
@@ -100,7 +100,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
     colorDomain: null,
     radiusDomain: null,
     colorRange: ['#f7fbff', '#08306b'],
-    radiusRange: [4, 12],
+    radiusRange: null,
 
     pointerEvents: 'all',
     // Handle parent default options
@@ -154,7 +154,7 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
       .clamp(true);
 
     this._scale.radius
-      .range(this.options.radiusRange)
+      .range(this.options.radiusRange ?? [this.options.radius, this.options.radius])
       .clamp(true);
   };
 
@@ -455,8 +455,8 @@ export class HexbinLayer extends L.SVG implements L.HexbinLayer {
   radiusRange(v: [number, number]): this;
   radiusRange(v?: [number, number]): this | [number, number] {
     if (v === undefined) { return this.options.radiusRange; }
-    this.options.radiusRange = v;
-    this._scale.radius.range(v).clamp(true);
+    this.options.radiusRange = v ?? [this.options.radius, this.options.radius];
+    this._scale.radius.range(this.options.radiusRange).clamp(true);
 
     return this;
   }

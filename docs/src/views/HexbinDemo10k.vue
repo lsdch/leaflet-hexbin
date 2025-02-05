@@ -8,7 +8,7 @@
       />
       <LHexbinLayer
         :data
-        :radius-range
+        :radius-range="useRadiusRange ? radiusRange : null"
         :radius
         :opacity
         :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
@@ -50,8 +50,15 @@
           v-model="radiusRange"
           :min="1"
           :max="50"
+          :disabled="!useRadiusRange"
         >
         </v-range-slider>
+        <v-switch
+          v-model="useRadiusRange"
+          color="primary"
+          label="Use radius range"
+          hide-details
+        ></v-switch>
       </v-col>
     </v-row>
     <v-row>
@@ -79,6 +86,7 @@ import { ref } from 'vue'
 const radius = ref(12)
 const opacity = ref(1)
 const radiusRange = ref<[number, number]>([4, 12])
+const useRadiusRange = ref(false)
 </script>
 
 <style lang="scss">

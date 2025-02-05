@@ -76,8 +76,7 @@ export const hexbinLayerProps = {
    * Sets the range of the radius scale used to size the hexbins.
    */
   radiusRange: {
-    type: Array as unknown as PropType<[number, number]>,
-    default: [4, 12]
+    type: Array as unknown as PropType<[number, number] | null>,
   }
 } as const
 
