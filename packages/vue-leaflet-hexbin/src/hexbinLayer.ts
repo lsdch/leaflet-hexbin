@@ -1,6 +1,6 @@
 import { HexbinHoverHandler, type HexbinLayerConfig } from "leaflet-hexbin"
 // import type L from 'leaflet'
-import type { ExtractPublicPropTypes, PropType, Ref, SetupContext } from 'vue'
+import type { ComponentObjectPropsOptions, ExtractPublicPropTypes, Prop, PropType, Ref, SetupContext } from 'vue'
 
 import { Functions, Utilities } from '@vue-leaflet/vue-leaflet'
 import { type HexbinLayer, type LatLngExpression, type LeafletEventHandlerFnMap } from 'leaflet'
@@ -22,52 +22,62 @@ export const hexbinLayerProps = {
 
   },
   /**
-   * Hex radius in pixels.
+   * Hex grid cell radius in pixels.
+   * This radius controls the radius of the hexagons used to bin the data
+   * but not necessarily to draw each individual hexbin.
    */
   radius: {
     type: Number,
-
+    validator(value: number) {
+      return value > 0
+    },
   },
   /**
    * Opacity of the layer.
    */
   opacity: {
     type: Number,
-
+    validator(value: number) {
+      return value >= 0 && value <= 1
+    },
   },
   /**
    * Duration of transition in milliseconds.
    */
   duration: {
     type: Number,
-
+    validator(value: number) {
+      return value >= 0
+    }
   },
   /**
-   * Color scale extent.
+   * Color scale extent: [min, max] scale factor for color interpolation.
    */
   colorScaleExtent: {
     type: Array as unknown as PropType<[number, number]>,
-
+    default: [1, undefined]
   },
   /**
-   * Radius scale extent.
+   * Radius scale extent: [min, max] scale factor for radius interpolation.
    */
   radiusScaleExtent: {
     type: Array as unknown as PropType<[number, number]>,
-
+    default: [1, undefined]
   },
   /**
-   * Color range.
+   * Sets the range of the color scale used to fill the hexbins.
+   * Colors scale interpolates between all provided colors.
    */
   colorRange: {
     type: Array<string>,
+    default: ['#f7fbff', '#08306b']
   },
   /**
-   * Radius range.
+   * Sets the range of the radius scale used to size the hexbins.
    */
   radiusRange: {
     type: Array as unknown as PropType<[number, number]>,
-
+    default: [4, 12]
   }
 } as const
 
@@ -111,7 +121,6 @@ export const setupHexbinLayer = <Events = unknown>(
   const methods = {
     ...featureGroupMethods,
     setRadius(radius: number) {
-      console.log('set radius')
       leafletRef.value?.radius(radius).redraw()
     },
     setDuration(duration: number) {
