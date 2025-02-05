@@ -1,5 +1,5 @@
 import { HexbinLayer as CHexbinLayer, type HexbinLayerConfig as IHexbinLayerConfig, hexbinLayer, type HexbinData } from './HexbinLayer'
-import HexbinHoverHandler, { HexbinHoverHandler as IHexbinHoverHandler } from './HexbinHoverHandler'
+import HexbinHoverHandler from './HexbinHoverHandler'
 
 
 

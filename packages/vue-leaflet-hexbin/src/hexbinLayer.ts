@@ -7,92 +7,99 @@ import { type LatLngExpression, type LeafletEventHandlerFnMap } from 'leaflet'
 const { propsToLeafletOptions } = Utilities
 const { featureGroupProps, setupFeatureGroup } = Functions.FeatureGroup
 
-export const hexbinLayerProps = {
-  ...featureGroupProps,
+export function hexbinLayerProps<Data>() {
+  return {
+    ...featureGroupProps,
 
-  hoverHandler: {
-    type: Object as PropType<HexbinHoverHandler>,
-  },
-
-  /**
-   * LatLng data points to be used for the hexbin layer.
-   */
-  data: {
-    type: Array<LatLngExpression> as PropType<Array<LatLngExpression>>,
-
-  },
-  /**
-   * Hex grid cell radius in pixels.
-   * This radius controls the radius of the hexagons used to bin the data
-   * but not necessarily to draw each individual hexbin.
-   */
-  radius: {
-    type: Number,
-    validator(value: number) {
-      return value > 0
+    hoverHandler: {
+      type: Object as PropType<HexbinHoverHandler<Data>>,
     },
-  },
-  /**
-   * Opacity of the layer.
-   */
-  opacity: {
-    type: [Number, Array] as PropType<number | [number, number]>,
-    validator(value: number | [number, number]) {
-      if (typeof value === 'number') {
-        return value >= 0 && value <= 1
-      } else {
-        return value[0] >= 0 && value[0] <= 1 && value[1] >= 0 && value[1] <= 1
+
+    /**
+     * LatLng data points to be used for the hexbin layer.
+     */
+    data: {
+      type: Array as PropType<Array<Data>>,
+    },
+    /**
+     * Accessor function for the data points if data is not LatLngExpression
+     */
+    accessor: {
+      type: Function as PropType<(d: Data) => LatLngExpression>,
+    },
+    /**
+     * Hex grid cell radius in pixels.
+     * This radius controls the radius of the hexagons used to bin the data
+     * but not necessarily to draw each individual hexbin.
+     */
+    radius: {
+      type: Number,
+      validator(value: number) {
+        return value > 0
+      },
+    },
+    /**
+     * Opacity of the layer.
+     */
+    opacity: {
+      type: [Number, Array] as PropType<number | [number, number]>,
+      validator(value: number | [number, number]) {
+        if (typeof value === 'number') {
+          return value >= 0 && value <= 1
+        } else {
+          return value[0] >= 0 && value[0] <= 1 && value[1] >= 0 && value[1] <= 1
+        }
+      },
+      default: 0.6
+    },
+    /**
+     * Duration of transition in milliseconds.
+     */
+    duration: {
+      type: Number,
+      validator(value: number) {
+        return value >= 0
       }
     },
-    default: 0.6
-  },
-  /**
-   * Duration of transition in milliseconds.
-   */
-  duration: {
-    type: Number,
-    validator(value: number) {
-      return value >= 0
+    /**
+     * Color scale extent: [min, max].
+     */
+    colorScaleExtent: {
+      type: Array as unknown as PropType<[number, number]>,
+      default: [1, undefined]
+    },
+    /**
+     * Radius scale extent: [min, max].
+     */
+    radiusScaleExtent: {
+      type: Array as unknown as PropType<[number, number]>,
+      default: [1, undefined]
+    },
+    /**
+     * Opacity scale extent: [min, max].
+     */
+    opacityScaleExtent: {
+      type: Array as unknown as PropType<[number, number]>,
+      default: [1, undefined]
+    },
+    /**
+     * Sets the range of the color scale used to fill the hexbins.
+     * Colors scale interpolates between all provided colors.
+     */
+    colorRange: {
+      type: Array<string>,
+      default: ['#f7fbff', '#08306b']
+    },
+    /**
+     * Sets the range of the radius scale used to size the hexbins.
+     */
+    radiusRange: {
+      type: Array as unknown as PropType<[number, number] | null>,
     }
-  },
-  /**
-   * Color scale extent: [min, max].
-   */
-  colorScaleExtent: {
-    type: Array as unknown as PropType<[number, number]>,
-    default: [1, undefined]
-  },
-  /**
-   * Radius scale extent: [min, max].
-   */
-  radiusScaleExtent: {
-    type: Array as unknown as PropType<[number, number]>,
-    default: [1, undefined]
-  },
-  /**
-   * Opacity scale extent: [min, max].
-   */
-  opacityScaleExtent: {
-    type: Array as unknown as PropType<[number, number]>,
-    default: [1, undefined]
-  },
-  /**
-   * Sets the range of the color scale used to fill the hexbins.
-   * Colors scale interpolates between all provided colors.
-   */
-  colorRange: {
-    type: Array<string>,
-    default: ['#f7fbff', '#08306b']
-  },
-  /**
-   * Sets the range of the radius scale used to size the hexbins.
-   */
-  radiusRange: {
-    type: Array as unknown as PropType<[number, number] | null>,
-  }
-} as const
+  } as const
+}
 
-export type LHexbinLayerProps = ExtractPublicPropTypes<typeof hexbinLayerProps>
+export type LHexbinLayerProps<Data> = ExtractPublicPropTypes<ReturnType<typeof hexbinLayerProps<Data>>>
 
 const featureGroupEvents = {
   click() {
@@ -112,9 +119,9 @@ export const hexbinLayerEvents = {
 
 export type LHexbinLayerEvents = typeof hexbinLayerEvents & LeafletEventHandlerFnMap
 
-export const setupHexbinLayer = <Events = unknown>(
-  props: LHexbinLayerProps,
-  leafletRef: Ref<HexbinLayer | undefined>,
+export const setupHexbinLayer = <Data = LatLngExpression, Events = unknown>(
+  props: LHexbinLayerProps<Data>,
+  leafletRef: Ref<HexbinLayer<Data> | undefined>,
   context: SetupContext<Events>
 ) => {
   const { options: featureOptions, methods: featureGroupMethods } = setupFeatureGroup(
@@ -125,7 +132,7 @@ export const setupHexbinLayer = <Events = unknown>(
 
   const options = propsToLeafletOptions<HexbinLayerConfig>(
     props,
-    hexbinLayerProps,
+    hexbinLayerProps(),
     featureOptions
   )
 
@@ -152,9 +159,12 @@ export const setupHexbinLayer = <Events = unknown>(
     setRadiusRange(range: [number, number]) {
       leafletRef.value?.radiusRange(range)
     },
-    setData(data: LatLngExpression[]) {
-      leafletRef.value?.data(data)
-    }
+    // setData(data: Data[]) {
+    //   leafletRef.value?.data(data)
+    // }
+    // setAccessor(accessor: (d: Data) => LatLngExpression) {
+    //   leafletRef.value?.accessor(accessor)
+    // }
   }
 
   return { options, methods }

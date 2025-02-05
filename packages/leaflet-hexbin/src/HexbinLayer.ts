@@ -86,17 +86,26 @@ export interface HexbinLayerConfig {
 /**
  * Hexbin data attached to each hexagon, once binned.
  */
-export type HexbinData = {
-  o: L.LatLngExpression;
+export type HexbinData<Data> = {
+  data: Data;
+  coord: L.LatLngExpression;
   point: Readonly<[number, number]>;
 }
 
+
+function isLatLngExpression(d: any): d is L.LatLngExpression {
+  return (
+    d instanceof L.LatLng ||
+    (typeof d === 'object' && "lat" in d && "lng" in d) ||
+    (Array.isArray(d) && d.length === 2 && typeof d[0] === 'number' && typeof d[1] === 'number')
+  )
+}
 
 /**
  * Instantiate a hexbin layer.
  * Extends L.SVG to take advantage of built-in zoom animations.
  */
-export class HexbinLayer extends L.SVG implements HexbinLayer {
+export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   options: Required<HexbinLayerConfig> & L.RendererOptions = {
     radius: 12,
     opacity: 0.6,
@@ -117,12 +126,12 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
     ...L.Layer.prototype.options
   }
   _fn = {
-    lng: (d: L.LatLngExpression) => L.latLng(d).lng,
-    lat: (d: L.LatLngExpression) => L.latLng(d).lat,
-    colorValue: (d: HexbinData[]) => d.length,
-    radiusValue: (d: HexbinData[]) => d.length,
-    opacityValue: (d: HexbinData[]) => d.length,
-    fill: (d: HexbinData[]) => {
+    lng: (d: Data) => L.latLng(this._accessor(d)).lng,
+    lat: (d: Data) => L.latLng(this._accessor(d)).lat,
+    colorValue: (d: HexbinData<Data>[]) => d.length,
+    radiusValue: (d: HexbinData<Data>[]) => d.length,
+    opacityValue: (d: HexbinData<Data>[]) => d.length,
+    fill: (d: HexbinData<Data>[]) => {
       const val = this._fn.colorValue(d);
       return (null != val) ? this._scale.color(val) : 'none';
     }
@@ -138,16 +147,17 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
   _dispatch = dispatch<SVGPathElement>('mouseover', 'mouseout', 'click');
 
   // Set up the default hover handler
-  _hoverHandler: HexbinHoverHandler = HexbinHoverHandler.none();
+  _hoverHandler: HexbinHoverHandler<Data> = HexbinHoverHandler.none();
 
   // Create the hex layout
-  _hexLayout = hexbin<HexbinData>()
+  _hexLayout = hexbin<HexbinData<Data>>()
     .radius(this.options.radius)
     .x(({ point: [x, _] }) => x)
     .y(({ point: [_, y] }) => y);
 
   // Initialize the data array to be empty
-  _data = Array<L.LatLngExpression>()
+  _data = Array<Data>()
+
 
   declare _map: L.Map;
   declare _container: SVGElementTagNameMap['svg'];
@@ -175,6 +185,10 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
       ).clamp(true);
 
   };
+
+  _accessor(d: Data) {
+    return d as L.LatLngExpression;
+  }
 
   /**
    * Create the SVG container for the hexbins
@@ -236,9 +250,10 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
     if (!that._map) return
 
     // Generate the mapped version of the data
-    const data = that._data.map<HexbinData>((d) => {
-      const point = that._project(d);
-      return { o: d, point };
+    const data = that._data.map<HexbinData<Data>>((d: Data) => {
+      const coord = that._accessor(d)
+      const point = that._project(coord);
+      return { coord: coord, point, data: d };
     });
 
     // Select the hex group for the current zoom level. This has
@@ -266,7 +281,7 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
     return Array.from({ length }, (_, i) => from + (i * step));
   }
 
-  _createHexagons(g: d3.Selection<SVGGElement, number, SVGGElement, unknown>, data: HexbinData[]) {
+  _createHexagons(g: d3.Selection<SVGGElement, number, SVGGElement, unknown>, data: HexbinData<Data>[]) {
     const thisLayer = this;
 
     // Create the bins using the hexbin layout
@@ -304,7 +319,7 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
      *    Join the Hexagons to the data
      *    Use a deterministic id for tracking bins based on position
      */
-    const join = g.selectAll<SVGGElement, HexbinBin<HexbinData>>('g.hexbin-container')
+    const join = g.selectAll<SVGGElement, HexbinBin<HexbinData<Data>>>('g.hexbin-container')
       .data(bins, ({ x, y }) => `${x}:${y}`);
 
 
@@ -335,7 +350,7 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
 
     container.on('mouseover', function (this: SVGGElement, d: MouseEvent, i) {
       // Bring container to foreground by re-appending it to the DOM
-      const c = select<SVGGElement, HexbinBin<HexbinData>>(this).raise();
+      const c = select<SVGGElement, HexbinBin<HexbinData<Data>>>(this).raise();
     })
 
     const hexagons = container.append('path').attr('class', 'hexbin-hexagon')
@@ -362,18 +377,18 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
 
 
     // Grid enter-update
-    hexagons.on('mouseover', function (this: SVGPathElement, d: MouseEvent, i) {
-      thisLayer._hoverHandler.mouseover(this, thisLayer as HexbinLayer, d, i);
-      thisLayer._dispatch.call('mouseover', this, d, i);
+    hexagons.on('mouseover', function (this: SVGPathElement, ev: MouseEvent, data) {
+      thisLayer._hoverHandler.mouseover(this, thisLayer, ev, data);
+      thisLayer._dispatch.call('mouseover', this, data, thisLayer, ev);
       this.classList.add('hover')
     })
-      .on('mouseout', function (this: SVGPathElement, d: MouseEvent, i) {
-        thisLayer._hoverHandler.mouseout(this, thisLayer as HexbinLayer, d, i);
-        thisLayer._dispatch.call('mouseout', this, thisLayer as HexbinLayer, d, i);
+      .on('mouseout', function (this: SVGPathElement, ev: MouseEvent, data) {
+        thisLayer._hoverHandler.mouseout(this, thisLayer, ev, data);
+        thisLayer._dispatch.call('mouseout', this, data, thisLayer, ev);
         this.classList.remove('hover')
       })
-      .on('click', function (this, d, i) {
-        thisLayer._dispatch.call('click', this, thisLayer as HexbinLayer, d, i);
+      .on('click', function (this, ev: MouseEvent, data) {
+        thisLayer._dispatch.call('click', this, data, thisLayer, ev);
       });
 
 
@@ -391,13 +406,13 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
   }
 
   _getExtent(
-    bins: HexbinBin<HexbinData>[],
-    valueFn: (d: HexbinBin<HexbinData>) => number,
+    bins: HexbinBin<HexbinData<Data>>[],
+    valueFn: (d: HexbinBin<HexbinData<Data>>) => number,
     scaleExtent: [number, number | undefined]
   ): [number, number] {
 
     // Determine the extent of the values
-    let ext = extent<HexbinBin<HexbinData>, number>(bins, valueFn.bind(this));
+    let ext = extent<HexbinBin<HexbinData<Data>>, number>(bins, valueFn.bind(this));
     // If either's null, initialize them to 0
     if (ext[0] === undefined || ext[1] === undefined) {
       ext = [0, 0]
@@ -512,58 +527,81 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
     return this;
   }
 
-  lng(): (d: L.LatLngExpression) => number;
-  lng(v: (d: L.LatLngExpression) => number): this;
-  lng(v?: (d: L.LatLngExpression) => number) {
+  lng(): (d: Data) => number;
+  lng(v: (d: Data) => number): this;
+  lng(v?: (d: Data) => number) {
     if (v === undefined) { return this._fn.lng; }
     this._fn.lng = v;
 
     return this;
   }
 
-  lat(): (d: L.LatLngExpression) => number;
-  lat(v: (d: L.LatLngExpression) => number): this;
-  lat(v?: (d: L.LatLngExpression) => number) {
+  lat(): (d: Data) => number;
+  lat(v: (d: Data) => number): this;
+  lat(v?: (d: Data) => number) {
     if (v === undefined) { return this._fn.lat; }
     this._fn.lat = v;
 
     return this;
   }
 
-  colorValue(): (d: HexbinData[]) => number;
-  colorValue(v: (d: HexbinData[]) => number): this;
-  colorValue(v?: (d: HexbinData[]) => number) {
+  colorValue(): (d: HexbinData<Data>[]) => number;
+  colorValue(v: (d: HexbinData<Data>[]) => number): this;
+  colorValue(v?: (d: HexbinData<Data>[]) => number) {
     if (v === undefined) { return this._fn.colorValue; }
     this._fn.colorValue = v;
 
     return this;
   }
 
-  radiusValue(): (d: HexbinData[]) => number;
-  radiusValue(v: (d: HexbinData[]) => number): this;
-  radiusValue(v?: (d: HexbinData[]) => number) {
+  radiusValue(): (d: HexbinData<Data>[]) => number;
+  radiusValue(v: (d: HexbinData<Data>[]) => number): this;
+  radiusValue(v?: (d: HexbinData<Data>[]) => number) {
     if (v === undefined) { return this._fn.radiusValue; }
     this._fn.radiusValue = v;
 
     return this;
   }
 
-  fill(): (d: HexbinData[]) => string;
-  fill(v: (d: HexbinData[]) => string): this;
-  fill(v?: (d: HexbinData[]) => string) {
+  fill(): (d: HexbinData<Data>[]) => string;
+  fill(v: (d: HexbinData<Data>[]) => string): this;
+  fill(v?: (d: HexbinData<Data>[]) => string) {
     if (v === undefined) { return this._fn.fill; }
     this._fn.fill = v;
 
     return this;
   }
 
-  data(): L.LatLngExpression[];
-  data(v: L.LatLngExpression[]): this;
-  data(v?: L.LatLngExpression[]): this | L.LatLngExpression[] {
-    if (v === undefined) { return this._data; }
-    this._data = (null != v) ? v : [];
-    this.redraw();
+  // data(): Data[];
+  // data(v: (Data & L.LatLngExpression)[]): this;
+  // data(v: Data[], accessor?: (d: Data) => L.LatLngExpression): this;
 
+  // data(v?: L.LatLngExpression[], accessor?: Data extends L.LatLngExpression ? undefined : (d: Data) => L.LatLngExpression): this | Data[] {
+  //   if (v === undefined) { return this._data; }
+  //   this._data = (null != v) ? v : [];
+  //   this.redraw();
+
+  //   return this;
+  // }
+
+  data(): Data[];
+  data(v: Data extends L.LatLngExpression ? Data[] : never): this;
+  data(v: Data[], accessor?: (d: Data) => L.LatLngExpression): this;
+
+  // Implementation
+  data(v?: Data[] | L.LatLngExpression[], accessor?: (d: Data) => L.LatLngExpression): this | Data[] {
+    if (v === undefined) {
+      return this._data;
+    }
+
+    if (!isLatLngExpression(v[0]) && !accessor) {
+      console.error("Leaflet hexbin: data does not appear to be an array of L.LatLngExpression. You must provide an accessor function to convert the data to L.LatLngExpression");
+    }
+
+    this._data = v as Data[] ?? []
+    this._accessor = accessor ?? ((d: Data) => d as L.LatLngExpression)
+
+    this.redraw();
     return this;
   }
 
@@ -572,9 +610,9 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
    */
   dispatch() { return this._dispatch }
 
-  hoverHandler(): HexbinHoverHandler;
-  hoverHandler(v: HexbinHoverHandler): this;
-  hoverHandler(v?: HexbinHoverHandler): this | HexbinHoverHandler {
+  hoverHandler(): HexbinHoverHandler<Data>;
+  hoverHandler(v: HexbinHoverHandler<Data>): this;
+  hoverHandler(v?: HexbinHoverHandler<Data>): this | HexbinHoverHandler<Data> {
     if (v === undefined) { return this._hoverHandler; }
     this._hoverHandler = (null != v) ? v : HexbinHoverHandler.none();
 
@@ -608,8 +646,8 @@ export class HexbinLayer extends L.SVG implements HexbinLayer {
 /**
  * Factory function to instanciate a new hexbin layer
  */
-export function hexbinLayer(options?: HexbinLayerConfig) {
-  return new HexbinLayer(options);
+export function hexbinLayer<Data = L.LatLngExpression>(options?: HexbinLayerConfig) {
+  return new HexbinLayer<Data>(options);
 }
 
 

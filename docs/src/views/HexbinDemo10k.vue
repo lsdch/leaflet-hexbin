@@ -8,18 +8,19 @@
       />
       <LHexbinLayer
         :data
+        :accessor="({ coords }: Data) => coords"
         :radius
         :radius-range="useRadiusRange ? radiusRange : null"
         :opacity="opacity.asRange ? opacity.range : opacity.value"
         :duration
         :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
-        @click="(d, i) => console.log('click', d, i)"
+        @click="(data, layer, ev) => console.log('click', data, layer, ev)"
         @ready="(v) => console.log('ready')"
         :hover-handler="
           HexbinHoverHandler.compound([
             HexbinHoverHandler.resizeScale(2),
             // HexbinHoverHandler.resizeFill(),
-            HexbinHoverHandler.tooltip({
+            HexbinHoverHandler.tooltip<Data>({
               tooltipContent(d) {
                 return `Count: ${d.length}`
               },
@@ -113,9 +114,17 @@
 
 <script setup lang="ts">
 import { LMap, LTileLayer } from '@vue-leaflet/vue-leaflet'
-import data from '../data/points_10k'
-import { LHexbinLayer, HexbinHoverHandler } from 'vue-leaflet-hexbin'
 import { ref } from 'vue'
+import { HexbinHoverHandler, LHexbinLayer } from 'vue-leaflet-hexbin'
+import dataPoints from '../data/points_10k'
+
+type Data = { index: number; coords: [number, number, number] }
+const data = ref(
+  dataPoints.map((coords, i) => ({
+    index: i,
+    coords,
+  })),
+)
 
 const radius = ref(12)
 const opacity = ref({

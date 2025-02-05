@@ -2,18 +2,18 @@ import * as d3 from 'd3';
 import type { HexbinData } from './HexbinLayer';
 import { type HexbinLayer } from './HexbinLayer';
 
-export interface HexbinHoverHandler {
-  mouseover(svg: SVGPathElement, hexLayer: HexbinLayer, event: MouseEvent, data: HexbinData[]): void;
-  mouseout(svg: SVGPathElement, hexLayer: HexbinLayer, event: MouseEvent, data: HexbinData[]): void;
+export interface HexbinHoverHandler<Data> {
+  mouseover(svg: SVGPathElement, hexLayer: HexbinLayer<Data>, event: MouseEvent, data: HexbinData<Data>[]): void;
+  mouseout(svg: SVGPathElement, hexLayer: HexbinLayer<Data>, event: MouseEvent, data: HexbinData<Data>[]): void;
 }
 
 export namespace HexbinHoverHandler {
 
-  interface TooltipOptions {
-    tooltipContent: (d: HexbinData[], hexLayer: HexbinLayer) => string;
+  interface TooltipOptions<Data> {
+    tooltipContent: (d: HexbinData<Data>[], hexLayer: HexbinLayer<Data>) => string;
   }
 
-  export function tooltip(options: TooltipOptions = { tooltipContent(d) { return `Count: ${d.length}` } }): HexbinHoverHandler {
+  export function tooltip<Data>(options: TooltipOptions<Data> = { tooltipContent(d) { return `Count: ${d.length}` } }): HexbinHoverHandler<Data> {
 
     // Generate the tooltip
     const tooltip = d3.select('body').append('div')
@@ -27,7 +27,7 @@ export namespace HexbinHoverHandler {
 
     // return the handler instance
     return {
-      mouseover: function (svg: SVGPathElement, hexLayer: HexbinLayer, event: MouseEvent, data: HexbinData[]) {
+      mouseover: function (svg: SVGPathElement, hexLayer: HexbinLayer<Data>, event: MouseEvent, data: HexbinData<Data>[]) {
         const gCoords = d3.pointer(event);
 
         tooltip
@@ -47,7 +47,7 @@ export namespace HexbinHoverHandler {
           .style('left', event.clientX - gCoords[0] - w / 2 + 'px');
 
       },
-      mouseout: function (svg, hexLayer: HexbinLayer, event: MouseEvent, data: HexbinData[]) {
+      mouseout: function (svg, hexLayer: HexbinLayer<Data>, event: MouseEvent, data: HexbinData<Data>[]) {
         tooltip
           .style('visibility', 'hidden')
           .html();
@@ -56,17 +56,17 @@ export namespace HexbinHoverHandler {
 
   }
 
-  export function resizeFill(): HexbinHoverHandler {
+  export function resizeFill(): HexbinHoverHandler<any> {
     return {
-      mouseover: function (svg: SVGPathElement, hexLayer: HexbinLayer, event: MouseEvent, data: HexbinData[]) {
-        const o = d3.select<HTMLElement | null, HexbinData[]>(svg.parentElement);
+      mouseover: function (svg: SVGPathElement, hexLayer: HexbinLayer<any>, event: MouseEvent, data: HexbinData<any>[]) {
+        const o = d3.select<HTMLElement | null, HexbinData<any>[]>(svg.parentElement);
         o.select('path.hexbin-hexagon')
           .attr('d', function (d) {
             return hexLayer._hexLayout.hexagon(hexLayer.options.radius);
           });
       },
-      mouseout: function (svg: SVGPathElement, hexLayer: HexbinLayer, event: MouseEvent, data: HexbinData[]) {
-        const o = d3.select<HTMLElement | null, HexbinData[]>(svg.parentElement);
+      mouseout: function (svg: SVGPathElement, hexLayer: HexbinLayer<any>, event: MouseEvent, data: HexbinData<any>[]) {
+        const o = d3.select<HTMLElement | null, HexbinData<any>[]>(svg.parentElement);
         o.select<SVGPathElement>('path.hexbin-hexagon')
           .attr('d', function (d) {
             return hexLayer._hexLayout.hexagon(hexLayer._scale.radius(hexLayer._fn.radiusValue.call(hexLayer, d)));
@@ -81,12 +81,12 @@ export namespace HexbinHoverHandler {
     duration?: number;
   }
 
-  export function resizeScale(radiusScale: number = 1.5): HexbinHoverHandler {
+  export function resizeScale(radiusScale: number = 1.5): HexbinHoverHandler<any> {
 
     // return the handler instance
     return {
       mouseover: function (svg, hexLayer, event, data) {
-        const o = d3.select<HTMLElement | null, HexbinData[]>(svg.parentElement);
+        const o = d3.select<HTMLElement | null, HexbinData<any>[]>(svg.parentElement);
         o.select('path.hexbin-hexagon')
           .transition().duration(hexLayer.options.duration)
           .attr('d', function () {
@@ -94,7 +94,7 @@ export namespace HexbinHoverHandler {
           });
       },
       mouseout: function (svg, hexLayer, event, data) {
-        const o = d3.select<HTMLElement | null, HexbinData[]>(svg.parentElement!);
+        const o = d3.select<HTMLElement | null, HexbinData<any>[]>(svg.parentElement!);
         o.select('path.hexbin-hexagon')
           .transition().duration(hexLayer.options.duration)
           .attr('d', (d) => {
@@ -105,7 +105,7 @@ export namespace HexbinHoverHandler {
   }
 
 
-  export function compound(handlers: HexbinHoverHandler[] = [none()]): HexbinHoverHandler {
+  export function compound<Data>(handlers: HexbinHoverHandler<Data>[] = [none()]): HexbinHoverHandler<Data> {
     return {
       mouseover: function (svg, hexLayer, event, data) {
         handlers!.forEach((h) => { h.mouseover(svg, hexLayer, event, data); });
@@ -116,7 +116,7 @@ export namespace HexbinHoverHandler {
     };
   }
 
-  export function none(): HexbinHoverHandler {
+  export function none(): HexbinHoverHandler<any> {
     return {
       mouseover: function () { },
       mouseout: function () { }
