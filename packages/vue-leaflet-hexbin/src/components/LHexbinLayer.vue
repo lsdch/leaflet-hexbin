@@ -56,7 +56,7 @@ type HexSelection = {
   event: MouseEvent
   latLng: L.LatLng
 }
-const selected = ref<HexSelection>()
+const selected = ref<Partial<HexSelection>>({})
 
 onMounted(async () => {
   leafletObject.value = markRaw(hexbinLayer<Data>(options))
