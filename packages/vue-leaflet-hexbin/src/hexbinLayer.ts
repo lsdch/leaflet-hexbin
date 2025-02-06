@@ -6,12 +6,17 @@ import { type LatLngExpression, type LeafletEventHandlerFnMap } from 'leaflet'
 const { propsToLeafletOptions } = Utilities
 const { featureGroupProps, setupFeatureGroup } = Functions.FeatureGroup
 
+type HoverHandlers = {
+  fill?: boolean,
+  scale?: number
+}
+
 export function hexbinLayerProps<Data>() {
   return {
     ...featureGroupProps,
 
-    hoverHandler: {
-      type: Object as PropType<HexbinHoverHandler<Data>>,
+    hover: {
+      type: Object as PropType<HoverHandlers>,
     },
 
     /**

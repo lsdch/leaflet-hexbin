@@ -6,7 +6,7 @@
 
 <script setup lang="ts" generic="Data">
 import { Functions, InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
-import { hexbinLayer, type HexbinData, type HexbinLayer } from 'leaflet-hexbin'
+import { HexbinHoverHandler, hexbinLayer, type HexbinData, type HexbinLayer } from 'leaflet-hexbin'
 
 import {
   markRaw,
@@ -25,9 +25,19 @@ import { hexbinLayerProps, setupHexbinLayer } from '../hexbinLayer'
 
 const { propsBinder, assertInject } = Utilities
 type HexbinEvents = {
-  mouseover: [data: HexbinData<Data>[], hexbinLayer: HexbinLayer, event: MouseEvent]
-  mouseout: [data: HexbinData<Data>[], hexbinLayer: HexbinLayer, event: MouseEvent]
-  click: [data: HexbinData<Data>[], hexbinLayer: HexbinLayer, event: MouseEvent]
+  mouseover: [
+    data: HexbinData<Data>[],
+    // latLng: L.LatLng,
+    hexbinLayer: HexbinLayer,
+    event: MouseEvent,
+  ]
+  mouseout: [
+    data: HexbinData<Data>[],
+    // latLng: L.LatLng,
+    hexbinLayer: HexbinLayer,
+    event: MouseEvent,
+  ]
+  click: [data: HexbinData<Data>[], latLng: L.LatLng, hexbinLayer: HexbinLayer, event: MouseEvent]
 }
 type Events = {
   ready: [payload: HexbinLayer]
@@ -57,34 +67,50 @@ type HexSelection = {
   latLng: L.LatLng
 }
 const selected = ref<Partial<HexSelection>>({})
+const hovered = ref<Partial<HexSelection>>({})
 
 onMounted(async () => {
   leafletObject.value = markRaw(hexbinLayer<Data>(options))
   leafletObject.value.data(props.data ?? [], props.accessor)
 
   watch(
-    () => props.hoverHandler,
-    (handler) => {
-      if (leafletObject.value && handler) {
-        leafletObject.value.hoverHandler(handler)
-      }
+    () => props.hover,
+    (hover) => {
+      if (!leafletObject.value) return
+      const handlers = []
+      if (hover?.fill) handlers.push(HexbinHoverHandler.resizeFill())
+      if (hover?.scale) handlers.push(HexbinHoverHandler.resizeScale(hover.scale))
+      leafletObject.value.hoverHandler(HexbinHoverHandler.compound(handlers))
     },
     { immediate: true },
   )
 
   // Bind events
-  hexEvents.forEach((event) => {
-    leafletObject
-      .value!.dispatch()
-      .on(event, (data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => {
-        // Disgusting hack to get the correct types
-        emit(event as 'mouseover', data, layer, ev)
-      })
-  })
-  leafletObject.value.dispatch().on('click', (data: HexbinData<Data>[], latLng, layer, ev) => {
-    selected.value = { data, layer, event: ev, latLng }
-    leafletObject.value!.openPopup(latLng)
-  })
+  leafletObject.value
+    .dispatch()
+    .on('mouseover', (data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => {
+      hovered.value = { data, layer, event: ev }
+      emit('mouseover', data, layer, ev)
+    })
+
+  leafletObject.value
+    .dispatch()
+    .on('mouseout', (data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => {
+      hovered.value = {}
+      emit('mouseout', data, layer, ev)
+    })
+
+  // Bind popup
+  leafletObject.value
+    .dispatch()
+    .on(
+      'click',
+      (data: HexbinData<Data>[], latLng: L.LatLng, layer: HexbinLayer, ev: MouseEvent) => {
+        emit('click', data, latLng, layer, ev)
+        selected.value = { data, layer, event: ev, latLng }
+        if (leafletObject.value?.getPopup()) leafletObject.value!.openPopup(latLng)
+      },
+    )
 
   propsBinder(methods, leafletObject.value, props)
 

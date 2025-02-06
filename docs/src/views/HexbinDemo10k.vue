@@ -15,13 +15,7 @@
         :duration
         :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
         @ready="(v) => console.log('ready')"
-        @popupclose="console.log('CLOSE')"
-        :hover-handler="
-          HexbinHoverHandler.compound([
-            // HexbinHoverHandler.resizeScale(2),
-            HexbinHoverHandler.resizeFill(),
-          ])
-        "
+        :hover="{ fill: true, scale: 1.5 }"
       >
         <template #popup="{ data, layer, event, latLng }">
           <LPopup>
@@ -64,9 +58,7 @@
             />
           </v-card-text>
         </v-card>
-      </v-col>
-      <v-col>
-        <v-card title="Opacity">
+        <v-card title="Opacity" class="mt-5">
           <template #append>
             <v-switch
               v-model="opacity.asRange"
@@ -96,17 +88,41 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
-    <v-row>
       <v-col>
-        <v-slider
-          v-model="duration"
-          label="Transition duration (ms)"
-          :min="0"
-          :max="2000"
-          thumb-label
-        >
-        </v-slider>
+        <v-card title="On hover">
+          <v-card-text>
+            <v-switch
+              label="Fill"
+              v-model="hover.fill"
+              color="primary"
+              hint="Scale hexagon to fill grid cell"
+              persistent-hint
+            ></v-switch>
+            <div class="d-flex">
+              <v-switch label="Scale" v-model="hover.scale.active" color="primary"></v-switch>
+              <v-slider
+                v-model="hover.scale.factor"
+                :disabled="!hover.scale.active"
+                :min="1"
+                :max="2"
+                step="0.1"
+                thumb-label
+              ></v-slider>
+            </div>
+          </v-card-text>
+        </v-card>
+        <v-card class="mt-5">
+          <v-card-text>
+            <v-slider
+              v-model="duration"
+              label="Transition duration (ms)"
+              :min="0"
+              :max="2000"
+              thumb-label
+            >
+            </v-slider>
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -115,7 +131,7 @@
 <script setup lang="ts">
 import { LLayerGroup, LMap, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet'
 import { ref } from 'vue'
-import { HexbinHoverHandler, LHexbinLayer } from 'vue-leaflet-hexbin'
+import { LHexbinLayer } from 'vue-leaflet-hexbin'
 import dataPoints from '../data/points_10k'
 
 type Data = { index: number; coords: [number, number, number] }
@@ -135,6 +151,13 @@ const opacity = ref({
 const radiusRange = ref<[number, number]>([4, 12])
 const useRadiusRange = ref(false)
 const duration = ref(200)
+const hover = ref({
+  fill: true,
+  scale: {
+    active: false,
+    factor: 1.5,
+  },
+})
 </script>
 
 <style lang="scss">
