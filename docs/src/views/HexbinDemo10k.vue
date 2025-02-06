@@ -14,8 +14,8 @@
         :opacity="opacity.asRange ? opacity.range : opacity.value"
         :duration
         :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
-        @click="(data, layer, ev) => console.log('click', data, layer, ev)"
         @ready="(v) => console.log('ready')"
+        @popupclose="console.log('CLOSE')"
         :hover-handler="
           HexbinHoverHandler.compound([
             HexbinHoverHandler.resizeScale(2),
@@ -28,7 +28,12 @@
           ])
         "
       >
-        <!-- @mouseover="(d, i) => console.log('mouseover', d, i)" -->
+        <template #popup="{ data, layer, event, latLng }">
+          <LPopup>
+            <p>Count: {{ data?.length }}</p>
+            <p>Coords: {{ latLng?.lat }}, {{ latLng?.lng }}</p>
+          </LPopup>
+        </template>
       </LHexbinLayer>
     </l-map>
   </div>
@@ -113,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { LMap, LTileLayer } from '@vue-leaflet/vue-leaflet'
+import { LLayerGroup, LMap, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet'
 import { ref } from 'vue'
 import { HexbinHoverHandler, LHexbinLayer } from 'vue-leaflet-hexbin'
 import dataPoints from '../data/points_10k'

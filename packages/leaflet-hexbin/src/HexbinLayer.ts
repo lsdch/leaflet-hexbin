@@ -350,7 +350,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
     container.on('mouseover', function (this: SVGGElement, d: MouseEvent, i) {
       // Bring container to foreground by re-appending it to the DOM
-      const c = select<SVGGElement, HexbinBin<HexbinData<Data>>>(this).raise();
+      select<SVGGElement, HexbinBin<HexbinData<Data>>>(this).raise();
     })
 
     const hexagons = container.append('path').attr('class', 'hexbin-hexagon')
@@ -388,7 +388,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
         this.classList.remove('hover')
       })
       .on('click', function (this, ev: MouseEvent, data) {
-        thisLayer._dispatch.call('click', this, data, thisLayer, ev);
+        const latLng = thisLayer._map.layerPointToLatLng(L.point(data.x, data.y));
+        thisLayer._dispatch.call('click', this, data, latLng, thisLayer, ev);
+        ev.stopPropagation()
       });
 
 

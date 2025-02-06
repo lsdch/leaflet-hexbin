@@ -1,10 +1,12 @@
 <template>
-  <component :is="vNode" />
+  <div v-if="ready">
+    <slot name="popup" v-bind="selected"> </slot>
+  </div>
 </template>
 
 <script setup lang="ts" generic="Data">
 import { Functions, InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
-import { type HexbinLayer, type HexbinData, hexbinLayer } from 'leaflet-hexbin'
+import { hexbinLayer, type HexbinData, type HexbinLayer } from 'leaflet-hexbin'
 
 import {
   markRaw,
@@ -20,11 +22,8 @@ import {
 } from 'vue'
 
 import { hexbinLayerProps, setupHexbinLayer } from '../hexbinLayer'
-import type { LatLngExpression } from 'leaflet'
 
-const { propsBinder, assertInject, WINDOW_OR_GLOBAL } = Utilities
-const { render } = Functions.Layer
-
+const { propsBinder, assertInject } = Utilities
 type HexbinEvents = {
   mouseover: [data: HexbinData<Data>[], hexbinLayer: HexbinLayer, event: MouseEvent]
   mouseout: [data: HexbinData<Data>[], hexbinLayer: HexbinLayer, event: MouseEvent]
@@ -50,7 +49,15 @@ const ready = ref(false)
 const addLayer = assertInject(InjectionKeys.AddLayerInjection)
 
 const { methods, options } = setupHexbinLayer<Data>(props, leafletObject, context)
-console.log(props)
+
+type HexSelection = {
+  data: HexbinData<Data>[]
+  layer: HexbinLayer
+  event: MouseEvent
+  latLng: L.LatLng
+}
+const selected = ref<HexSelection>()
+
 onMounted(async () => {
   leafletObject.value = markRaw(hexbinLayer<Data>(options))
   leafletObject.value.data(props.data ?? [], props.accessor)
@@ -74,6 +81,10 @@ onMounted(async () => {
         emit(event as 'mouseover', data, layer, ev)
       })
   })
+  leafletObject.value.dispatch().on('click', (data: HexbinData<Data>[], latLng, layer, ev) => {
+    selected.value = { data, layer, event: ev, latLng }
+    leafletObject.value!.openPopup(latLng)
+  })
 
   propsBinder(methods, leafletObject.value, props)
 
@@ -86,13 +97,11 @@ onMounted(async () => {
   ready.value = true
   nextTick(() => context.emit('ready', leafletObject.value!))
 
+  // Bind data and accessor at the same time
   watchEffect(() => {
     if (ready.value && leafletObject.value) {
       leafletObject.value.data(props.data ?? [], props.accessor)
     }
   })
 })
-
-// Custom rendering delegated to leaflet
-const vNode = render(ready.value, slots)
 </script>
