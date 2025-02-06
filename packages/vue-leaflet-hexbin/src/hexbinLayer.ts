@@ -142,6 +142,12 @@ export const setupHexbinLayer = <Data = LatLngExpression, Events = unknown>(
 
   const methods = {
     ...featureGroupMethods,
+    bindTooltip(leafletObject: any): void {
+      leafletRef.value?.bindTooltip(leafletObject)
+    },
+    unbindTooltip() {
+      leafletRef.value?.unbindTooltip()
+    },
     setRadius(radius: number) {
       leafletRef.value?.radius(radius).redraw()
     },

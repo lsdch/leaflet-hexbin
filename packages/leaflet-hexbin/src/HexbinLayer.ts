@@ -12,8 +12,8 @@ declare module 'leaflet' {
 }
 
 type TooltipOptions<Data> = {
-  options: L.TooltipOptions,
-  content: L.Content | ((d: HexbinData<Data>[]) => L.Content)
+  options?: L.TooltipOptions,
+  content?: L.Content | ((d: HexbinData<Data>[]) => L.Content)
 }
 
 export interface HexbinLayerConfig {
@@ -166,7 +166,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
   declare _map: L.Map;
 
-  declare _tooltipOptions: TooltipOptions<Data>;
+  _tooltipOptions: TooltipOptions<Data> = {};
   declare _tooltip: L.Tooltip;
 
   declare _container: SVGElementTagNameMap['svg'];
@@ -217,7 +217,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
     // Store a reference to the map for later use
     this._map = map;
-    this._tooltip = L.tooltip(this._tooltipOptions.options).setLatLng([0, 0]).addTo(this._map);
+    this._tooltip?.setLatLng([0, 0]).addTo(map);
     // Redraw on moveend
     map.on('moveend', this.redraw, this);
     // Initial draw
@@ -390,7 +390,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     hexagons.on('mouseover', function (this: SVGPathElement, ev: MouseEvent, data) {
       if (thisLayer._tooltipOptions) {
         thisLayer._tooltip
-          .setContent(
+          ?.setContent(
             typeof thisLayer._tooltipOptions.content === "function"
               ? thisLayer._tooltipOptions.content(data)
               : thisLayer._tooltipOptions.content
@@ -405,7 +405,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
       this.classList.add('hover')
     })
       .on('mouseout', function (this: SVGPathElement, ev: MouseEvent, data) {
-        thisLayer._tooltip.close()
+        thisLayer._tooltip?.close()
         thisLayer._hoverHandler.mouseout(this, thisLayer, ev, data);
         thisLayer._dispatch.call('mouseout', this, data, thisLayer, ev);
         this.classList.remove('hover')
@@ -634,10 +634,38 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  // Cannot overload bindTooltip() with data dependant content
   tooltip(tooltip?: TooltipOptions<Data>): this {
     this._tooltipOptions = tooltip;
     if (this._tooltip)
       this._tooltip.options = tooltip.options;
+    else {
+      this._tooltip = L.tooltip(tooltip.options)
+    }
+    return this
+  }
+
+  getTooltip(): L.Tooltip | undefined {
+    return this._tooltip
+  }
+
+  bindTooltip(content: L.Tooltip | L.Content, options?: L.TooltipOptions): this {
+    if (content instanceof L.Tooltip) {
+      this._tooltip = content;
+      // FIXME: weird bug likely coming from vue-leaflet were tooltip is not properly positioned
+      // this._tooltip.options.offset[0] -= 5;
+      if (this._map) {
+        this._tooltip.setLatLng([0, 0]).addTo(this._map)
+      }
+    } else {
+      this._tooltip = L.tooltip(options).setContent(content);
+    }
+    return this
+  }
+
+  unbindTooltip(): this {
+    this._tooltip?.remove();
+    this._tooltip = undefined;
     return this
   }
 

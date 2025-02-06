@@ -23,6 +23,11 @@
             <p>Coords: {{ latLng?.lat }}, {{ latLng?.lng }}</p>
           </LPopup>
         </template>
+        <template #tooltip="{ data, layer, event }">
+          <LTooltip :options="{ direction: 'top' }">
+            <p>Count: {{ data?.length }}</p>
+          </LTooltip>
+        </template>
       </LHexbinLayer>
     </l-map>
   </div>
@@ -129,7 +134,7 @@
 </template>
 
 <script setup lang="ts">
-import { LLayerGroup, LMap, LPopup, LTileLayer } from '@vue-leaflet/vue-leaflet'
+import { LMap, LPopup, LTileLayer, LTooltip } from '@vue-leaflet/vue-leaflet'
 import { ref } from 'vue'
 import { LHexbinLayer } from 'vue-leaflet-hexbin'
 import dataPoints from '../data/points_10k'

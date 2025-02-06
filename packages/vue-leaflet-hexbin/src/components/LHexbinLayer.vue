@@ -1,6 +1,7 @@
 <template>
   <div v-if="ready">
     <slot name="popup" v-bind="selected"> </slot>
+    <slot name="tooltip" v-bind="hovered"></slot>
   </div>
 </template>
 
