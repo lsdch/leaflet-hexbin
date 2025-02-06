@@ -6,7 +6,9 @@
 </template>
 
 <script setup lang="ts" generic="Data">
-import { Functions, InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
+import type {} from 'd3'
+import type {} from 'd3-hexbin'
+import { InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
 import { HexbinHoverHandler, hexbinLayer, type HexbinData, type HexbinLayer } from 'leaflet-hexbin'
 
 import {
@@ -22,7 +24,7 @@ import {
   type SetupContext,
 } from 'vue'
 
-import { hexbinLayerProps, setupHexbinLayer } from '../hexbinLayer'
+import { hexbinLayerProps, setupHexbinLayer, type LHexbinLayerProps } from '../hexbinLayer'
 
 const { propsBinder, assertInject } = Utilities
 type HexbinEvents = {
@@ -52,14 +54,16 @@ const slots = useSlots()
 const emit = defineEmits<Events>()
 const context: SetupContext = { attrs, slots, emit: emit as EmitFn, expose: () => {} }
 
-const hexEvents = ['mouseover', 'mouseout', 'click'] as const
-
 const leafletObject = ref<HexbinLayer<Data>>()
 const ready = ref(false)
 
 const addLayer = assertInject(InjectionKeys.AddLayerInjection)
 
-const { methods, options } = setupHexbinLayer<Data>(props, leafletObject, context)
+const { methods, options } = setupHexbinLayer<Data>(
+  props as unknown as LHexbinLayerProps<Data>,
+  leafletObject,
+  context,
+)
 
 type HexSelection = {
   data: HexbinData<Data>[]

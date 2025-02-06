@@ -6,22 +6,7 @@
         layer-type="base"
         name="OpenStreetMap"
       />
-      <l-hexbin-layer
-        :data
-        :duration="200"
-        :radius-range="[2, 14]"
-        :hover-handler="
-          HexbinHoverHandler.compound([
-            HexbinHoverHandler.tooltip({
-              tooltipContent(d) {
-                return `Count: ${d.length}`
-              },
-            }),
-            HexbinHoverHandler.resizeScale(1.5),
-          ])
-        "
-      >
-      </l-hexbin-layer>
+      <l-hexbin-layer :data :duration="200" :radius-range="[2, 14]"> </l-hexbin-layer>
     </l-map>
   </div>
   <div class="marker-event">
@@ -44,7 +29,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { LMap, LTileLayer, LMarker } from '@vue-leaflet/vue-leaflet'
-import { LHexbinLayer, HexbinHoverHandler } from 'vue-leaflet-hexbin'
+import LHexbinLayer from 'vue-leaflet-hexbin'
 
 import L, { type LatLngExpression } from 'leaflet'
 

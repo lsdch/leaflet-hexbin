@@ -1,4 +1,4 @@
-import { HexbinHoverHandler, HexbinLayer, type HexbinLayerConfig } from "leaflet-hexbin"
+import { HexbinLayer, type HexbinLayerConfig } from "leaflet-hexbin"
 import type { ExtractPublicPropTypes, PropType, Ref, SetupContext } from 'vue'
 
 import { Functions, Utilities } from '@vue-leaflet/vue-leaflet'
@@ -10,6 +10,31 @@ type HoverHandlers = {
   fill?: boolean,
   scale?: number
 }
+
+
+/**
+ * Build fails when using ExtractPublicPropTypes so we resort to redefining prop types
+ */
+// export type LHexbinLayerProps<Data> = ExtractPublicPropTypes<ReturnType<typeof hexbinLayerProps<Data>>>
+
+export type LHexbinLayerProps<Data> = {
+  data: Data[]
+  accessor?: (d: Data) => LatLngExpression
+  radius?: number
+  opacity?: number | [number, number]
+  radiusRange?: [number, number]
+  duration?: number
+  colorScaleExtent?: [number, number],
+  radiusScaleExtent?: [number, number],
+  opacityScaleExtent?: [number, number],
+  colorRange?: string[]
+  hover?: {
+    fill?: boolean
+    scale?: number
+  }
+}
+
+
 
 export function hexbinLayerProps<Data>() {
   return {
@@ -103,7 +128,6 @@ export function hexbinLayerProps<Data>() {
   } as const
 }
 
-export type LHexbinLayerProps<Data> = ExtractPublicPropTypes<ReturnType<typeof hexbinLayerProps<Data>>>
 
 const featureGroupEvents = {
   click() {

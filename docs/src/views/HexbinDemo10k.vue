@@ -142,7 +142,7 @@
 <script setup lang="ts">
 import { LMap, LPopup, LTileLayer, LTooltip } from '@vue-leaflet/vue-leaflet'
 import { ref } from 'vue'
-import { LHexbinLayer } from 'vue-leaflet-hexbin'
+import LHexbinLayer from 'vue-leaflet-hexbin'
 import dataPoints from '../data/points_10k'
 
 type Data = { index: number; coords: [number, number, number] }

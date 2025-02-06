@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { LMap, LTileLayer } from '@vue-leaflet/vue-leaflet'
 import { ref } from 'vue'
-import { LHexbinLayer } from 'vue-leaflet-hexbin'
+import LHexbinLayer from 'vue-leaflet-hexbin'
 import type { LatLngExpression } from 'leaflet'
 
 const data = ref<LatLngExpression[]>([
