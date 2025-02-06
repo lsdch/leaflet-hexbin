@@ -19,8 +19,14 @@
       >
         <template #popup="{ data, layer, event, latLng }">
           <LPopup>
-            <p>Count: {{ data?.length }}</p>
-            <p>Coords: {{ latLng?.lat }}, {{ latLng?.lng }}</p>
+            <v-card flat>
+              <p>Count: {{ data?.length }}</p>
+              <p>
+                Coords:
+                <v-chip class="mx-1" size="small">{{ latLng?.lat.toFixed(4) }}</v-chip>
+                <v-chip class="mx-1" size="small">{{ latLng?.lng.toFixed(4) }}</v-chip>
+              </p>
+            </v-card>
           </LPopup>
         </template>
         <template #tooltip="{ data, layer, event }">
