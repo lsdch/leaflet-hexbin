@@ -48,4 +48,5 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Deploy docs
-        run: cd docs && pnpm run deploy
+        working-directory: docs
+        run: 'pnpm build && cp dist/index.html dist/404.html && pnpm gh-pages -d dist/'

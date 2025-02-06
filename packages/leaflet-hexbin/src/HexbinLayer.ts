@@ -167,7 +167,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   declare _map: L.Map;
 
   _tooltipOptions: TooltipOptions<Data> = {};
-  declare _tooltip: L.Tooltip;
+  declare _tooltip: L.Tooltip | undefined;
 
   declare _container: SVGElementTagNameMap['svg'];
 
@@ -388,7 +388,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
     // Grid enter-update
     hexagons.on('mouseover', function (this: SVGPathElement, ev: MouseEvent, data) {
-      if (thisLayer._tooltipOptions) {
+      if (thisLayer._tooltipOptions?.content) {
         thisLayer._tooltip
           ?.setContent(
             typeof thisLayer._tooltipOptions.content === "function"
@@ -635,10 +635,10 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   }
 
   // Cannot overload bindTooltip() with data dependant content
-  tooltip(tooltip?: TooltipOptions<Data>): this {
+  tooltip(tooltip: TooltipOptions<Data>): this {
     this._tooltipOptions = tooltip;
     if (this._tooltip)
-      this._tooltip.options = tooltip.options;
+      this._tooltip.options = tooltip.options ?? {};
     else {
       this._tooltip = L.tooltip(tooltip.options)
     }
