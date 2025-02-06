@@ -61,6 +61,7 @@ export namespace HexbinHoverHandler {
       mouseover: function (svg: SVGPathElement, hexLayer: HexbinLayer<any>, event: MouseEvent, data: HexbinData<any>[]) {
         const o = d3.select<HTMLElement | null, HexbinData<any>[]>(svg.parentElement);
         o.select('path.hexbin-hexagon')
+          .transition().duration(hexLayer.options.duration)
           .attr('d', function (d) {
             return hexLayer._hexLayout.hexagon(hexLayer.options.radius);
           });
@@ -68,6 +69,7 @@ export namespace HexbinHoverHandler {
       mouseout: function (svg: SVGPathElement, hexLayer: HexbinLayer<any>, event: MouseEvent, data: HexbinData<any>[]) {
         const o = d3.select<HTMLElement | null, HexbinData<any>[]>(svg.parentElement);
         o.select<SVGPathElement>('path.hexbin-hexagon')
+          .transition().duration(hexLayer.options.duration)
           .attr('d', function (d) {
             return hexLayer._hexLayout.hexagon(hexLayer._scale.radius(hexLayer._fn.radiusValue.call(hexLayer, d)));
           });
