@@ -1,5 +1,16 @@
 # vue-leaflet-hexbin
 
+## 0.1.0
+
+### Minor Changes
+
+- [`90dd4a0`](https://github.com/lsdch/leaflet-hexbin/commit/90dd4a02aeecad33cea4e2cc0218c12f4673ce32) Thanks [@lsdch](https://github.com/lsdch)! - - Improve popup and tooltip integration
+
+### Patch Changes
+
+- Updated dependencies [[`90dd4a0`](https://github.com/lsdch/leaflet-hexbin/commit/90dd4a02aeecad33cea4e2cc0218c12f4673ce32)]:
+  - leaflet-hexbin@0.1.0
+
 ## 0.0.6
 
 ### Patch Changes
