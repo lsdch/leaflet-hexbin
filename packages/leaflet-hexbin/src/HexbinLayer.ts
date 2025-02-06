@@ -11,6 +11,11 @@ declare module 'leaflet' {
   }
 }
 
+type TooltipOptions<Data> = {
+  options: L.TooltipOptions,
+  content: L.Content | ((d: HexbinData<Data>[]) => L.Content)
+}
+
 export interface HexbinLayerConfig {
   /**
    * Hex grid cell radius in pixels.
@@ -160,6 +165,10 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
 
   declare _map: L.Map;
+
+  declare _tooltipOptions: TooltipOptions<Data>;
+  declare _tooltip: L.Tooltip;
+
   declare _container: SVGElementTagNameMap['svg'];
 
   // declare _container: HTMLElement;
@@ -208,6 +217,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
     // Store a reference to the map for later use
     this._map = map;
+    this._tooltip = L.tooltip(this._tooltipOptions.options).setLatLng([0, 0]).addTo(this._map);
     // Redraw on moveend
     map.on('moveend', this.redraw, this);
     // Initial draw
@@ -378,11 +388,24 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
     // Grid enter-update
     hexagons.on('mouseover', function (this: SVGPathElement, ev: MouseEvent, data) {
+      if (thisLayer._tooltipOptions) {
+        thisLayer._tooltip
+          .setContent(
+            typeof thisLayer._tooltipOptions.content === "function"
+              ? thisLayer._tooltipOptions.content(data)
+              : thisLayer._tooltipOptions.content
+          )
+          .setLatLng(
+            thisLayer._map.layerPointToLatLng(L.point(data.x, data.y))
+          )
+          .openOn(thisLayer._map);
+      }
       thisLayer._hoverHandler.mouseover(this, thisLayer, ev, data);
       thisLayer._dispatch.call('mouseover', this, data, thisLayer, ev);
       this.classList.add('hover')
     })
       .on('mouseout', function (this: SVGPathElement, ev: MouseEvent, data) {
+        thisLayer._tooltip.close()
         thisLayer._hoverHandler.mouseout(this, thisLayer, ev, data);
         thisLayer._dispatch.call('mouseout', this, data, thisLayer, ev);
         this.classList.remove('hover')
@@ -574,18 +597,6 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
-  // data(): Data[];
-  // data(v: (Data & L.LatLngExpression)[]): this;
-  // data(v: Data[], accessor?: (d: Data) => L.LatLngExpression): this;
-
-  // data(v?: L.LatLngExpression[], accessor?: Data extends L.LatLngExpression ? undefined : (d: Data) => L.LatLngExpression): this | Data[] {
-  //   if (v === undefined) { return this._data; }
-  //   this._data = (null != v) ? v : [];
-  //   this.redraw();
-
-  //   return this;
-  // }
-
   data(): Data[];
   data(v: Data extends L.LatLngExpression ? Data[] : never): this;
   data(v: Data[], accessor?: (d: Data) => L.LatLngExpression): this;
@@ -621,6 +632,13 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     this.redraw();
 
     return this;
+  }
+
+  tooltip(tooltip?: TooltipOptions<Data>): this {
+    this._tooltipOptions = tooltip;
+    if (this._tooltip)
+      this._tooltip.options = tooltip.options;
+    return this
   }
 
   /*

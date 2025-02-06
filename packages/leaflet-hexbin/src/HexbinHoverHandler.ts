@@ -9,53 +9,6 @@ export interface HexbinHoverHandler<Data> {
 
 export namespace HexbinHoverHandler {
 
-  interface TooltipOptions<Data> {
-    tooltipContent: (d: HexbinData<Data>[], hexLayer: HexbinLayer<Data>) => string;
-  }
-
-  export function tooltip<Data>(options: TooltipOptions<Data> = { tooltipContent(d) { return `Count: ${d.length}` } }): HexbinHoverHandler<Data> {
-
-    // Generate the tooltip
-    const tooltip = d3.select('body').append('div')
-      .attr('class', 'hexbin-tooltip')
-      .style('z-index', 9999)
-      .style('pointer-events', 'none')
-      .style('visibility', 'hidden')
-      .style('position', 'fixed');
-
-    tooltip.append('div').attr('class', 'tooltip-content');
-
-    // return the handler instance
-    return {
-      mouseover: function (svg: SVGPathElement, hexLayer: HexbinLayer<Data>, event: MouseEvent, data: HexbinData<Data>[]) {
-        const gCoords = d3.pointer(event);
-
-        tooltip
-          .style('visibility', 'visible')
-          .html(options.tooltipContent(data, hexLayer));
-
-
-        const div = tooltip.node();
-        if (!div) {
-          console.warn("Leaflet hexbin: tooltip node not found");
-          return
-        }
-        const h = div.clientHeight, w = div.clientWidth;
-
-        tooltip
-          .style('top', event.clientY - gCoords[1] - h - 16 + 'px')
-          .style('left', event.clientX - gCoords[0] - w / 2 + 'px');
-
-      },
-      mouseout: function (svg, hexLayer: HexbinLayer<Data>, event: MouseEvent, data: HexbinData<Data>[]) {
-        tooltip
-          .style('visibility', 'hidden')
-          .html();
-      }
-    };
-
-  }
-
   export function resizeFill(): HexbinHoverHandler<any> {
     return {
       mouseover: function (svg: SVGPathElement, hexLayer: HexbinLayer<any>, event: MouseEvent, data: HexbinData<any>[]) {

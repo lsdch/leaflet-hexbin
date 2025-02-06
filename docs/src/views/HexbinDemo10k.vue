@@ -18,13 +18,8 @@
         @popupclose="console.log('CLOSE')"
         :hover-handler="
           HexbinHoverHandler.compound([
-            HexbinHoverHandler.resizeScale(2),
-            // HexbinHoverHandler.resizeFill(),
-            HexbinHoverHandler.tooltip<Data>({
-              tooltipContent(d) {
-                return `Count: ${d.length}`
-              },
-            }),
+            // HexbinHoverHandler.resizeScale(2),
+            HexbinHoverHandler.resizeFill(),
           ])
         "
       >
