@@ -3,6 +3,12 @@
 
 # leaflet-hexbin
 
+<object alt="NPM Version" src="https://img.shields.io/npm/v/leaflet-hexbin?label=leaflet-hexbin&link=https%3A%2F%2Fwww.npmjs.com%2Fpackage%2Fleaflet-hexbin">
+
+[![leaflet-hexbin NPM Version](https://img.shields.io/npm/v/leaflet-hexbin?label=leaflet-hexbin)](https://www.npmjs.com/package/leaflet-hexbin)
+[![vue-leaflet-hexbin NPM Version](https://img.shields.io/npm/v/vue-leaflet-hexbin?label=vue-leaflet-hexbin&color=%2342B883)](https://www.npmjs.com/package/vue-leaflet-hexbin)
+
+
 > 🚧 Docs in progress 🚧
 
 > [Live demo](https://lsdch.github.io/leaflet-hexbin/)
