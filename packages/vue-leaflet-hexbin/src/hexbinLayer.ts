@@ -1,8 +1,8 @@
-import { HexbinLayer, type HexbinLayerConfig } from "leaflet-hexbin"
+import type { HexbinLayer, HexbinLayerConfig } from "leaflet-hexbin"
 import type { PropType, Ref, SetupContext } from 'vue'
 
 import { Functions, Utilities } from '@vue-leaflet/vue-leaflet'
-import { type LatLngExpression, type LeafletEventHandlerFnMap } from 'leaflet'
+import type { LatLngExpression, LeafletEventHandlerFnMap } from 'leaflet'
 const { propsToLeafletOptions } = Utilities
 const { featureGroupProps, setupFeatureGroup } = Functions.FeatureGroup
 

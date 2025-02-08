@@ -9,11 +9,13 @@
 import type {} from 'd3'
 import type {} from 'd3-hexbin'
 import { InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
-import { HexbinHoverHandler, hexbinLayer, type HexbinData, type HexbinLayer } from 'leaflet-hexbin'
+import type { HexbinData, HexbinLayer } from 'leaflet-hexbin'
+import { hexbinLayerProps, setupHexbinLayer, type LHexbinLayerProps } from '../hexbinLayer'
 
 import {
   markRaw,
   nextTick,
+  onBeforeMount,
   onMounted,
   ref,
   useAttrs,
@@ -23,8 +25,6 @@ import {
   type EmitFn,
   type SetupContext,
 } from 'vue'
-
-import { hexbinLayerProps, setupHexbinLayer, type LHexbinLayerProps } from '../hexbinLayer'
 
 const { propsBinder, assertInject } = Utilities
 type HexbinEvents = {
@@ -75,9 +75,9 @@ const selected = ref<Partial<HexSelection>>({})
 const hovered = ref<Partial<HexSelection>>({})
 
 onMounted(async () => {
+  const { HexbinHoverHandler, hexbinLayer } = await import('leaflet-hexbin')
   leafletObject.value = markRaw(hexbinLayer<Data>(options))
   leafletObject.value.data(props.data ?? [], props.accessor)
-
   watch(
     () => props.hover,
     (hover) => {
@@ -89,7 +89,6 @@ onMounted(async () => {
     },
     { immediate: true },
   )
-
   // Bind events
   leafletObject.value
     .dispatch()
@@ -122,7 +121,7 @@ onMounted(async () => {
   addLayer({
     ...props,
     ...methods,
-    leafletObject: leafletObject.value,
+    leafletObject: leafletObject.value!,
   })
 
   ready.value = true
