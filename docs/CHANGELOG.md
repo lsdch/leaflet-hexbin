@@ -1,5 +1,11 @@
 # leaflet-hexbin-docs
 
+## 0.1.5
+
+### Patch Changes
+
+- [`390fc4e`](https://github.com/lsdch/leaflet-hexbin/commit/390fc4e9255a804f468c1b99f7c87a1b77ee125d) Thanks [@lsdch](https://github.com/lsdch)! - fix link to toy dataset
+
 ## 0.1.4
 
 ### Patch Changes
