@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 50vh; width: 100%">
+  <v-card :height="500">
     <l-map :useGlobalLeaflet="true" :zoom="13" :center="[-37.9, 175.46]">
       <l-tile-layer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -19,7 +19,7 @@
       >
         <template #popup="{ data, layer, event, latLng }">
           <LPopup>
-            <v-card flat>
+            <v-card flat theme="light">
               <p>Count: {{ data?.length }}</p>
               <p>
                 Coords:
@@ -36,40 +36,35 @@
         </template>
       </LHexbinLayer>
     </l-map>
-  </div>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <v-card title="Radius">
-          <template #append>
-            <v-switch
-              v-model="useRadiusRange"
-              color="primary"
-              label="Use range scale"
-              hide-details
-            />
-          </template>
-          <v-card-text>
-            <v-slider
-              label="Radius"
-              hint="Controls bin radius"
-              persistent-hint
-              v-model="radius"
-              :min="5"
-              :max="50"
-            />
-            <v-range-slider
-              label="Radius range"
-              hint="Scale hex radius with bin length"
-              persistent-hint
-              v-model="radiusRange"
-              :min="1"
-              :max="50"
-              :disabled="!useRadiusRange"
-            />
-          </v-card-text>
-        </v-card>
-        <v-card title="Opacity" class="mt-5">
+  </v-card>
+  <div class="mt-3">
+    <v-card title="Radius">
+      <template #append>
+        <v-switch v-model="useRadiusRange" color="primary" label="Use range scale" hide-details />
+      </template>
+      <v-card-text>
+        <v-slider
+          label="Radius"
+          hint="Controls bin radius"
+          persistent-hint
+          v-model="radius"
+          :min="5"
+          :max="50"
+        />
+        <v-range-slider
+          label="Radius range"
+          hint="Scale hex radius with bin length"
+          persistent-hint
+          v-model="radiusRange"
+          :min="1"
+          :max="50"
+          :disabled="!useRadiusRange"
+        />
+      </v-card-text>
+    </v-card>
+    <v-row class="my-0">
+      <v-col cols="12" md="6">
+        <v-card title="Opacity" class="mt-0">
           <template #append>
             <v-switch
               v-model="opacity.asRange"
@@ -86,7 +81,8 @@
               :min="0"
               :max="1"
               :step="0.05"
-            ></v-range-slider>
+              hide-details
+            />
             <v-slider
               v-else
               v-model="opacity.value"
@@ -95,11 +91,12 @@
               :max="1"
               :step="0.05"
               thumb-label
-            ></v-slider>
+              hide-details
+            />
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col cols="12" md="6">
         <v-card title="On hover">
           <v-card-text>
             <v-switch
@@ -110,7 +107,12 @@
               persistent-hint
             ></v-switch>
             <div class="d-flex">
-              <v-switch label="Scale" v-model="hover.scale.active" color="primary"></v-switch>
+              <v-switch
+                label="Scale"
+                v-model="hover.scale.active"
+                color="primary"
+                hide-details
+              ></v-switch>
               <v-slider
                 v-model="hover.scale.factor"
                 :disabled="!hover.scale.active"
@@ -118,32 +120,34 @@
                 :max="2"
                 step="0.1"
                 thumb-label
+                hide-details
               ></v-slider>
             </div>
           </v-card-text>
         </v-card>
-        <v-card class="mt-5">
-          <v-card-text>
-            <v-slider
-              v-model="duration"
-              label="Transition duration (ms)"
-              :min="0"
-              :max="2000"
-              thumb-label
-            >
-            </v-slider>
-          </v-card-text>
-        </v-card>
       </v-col>
     </v-row>
-  </v-container>
+    <v-card class="mt-0">
+      <v-card-text>
+        <v-slider
+          v-model="duration"
+          label="Transition duration (ms)"
+          :min="0"
+          :max="2000"
+          thumb-label
+          hide-details
+        >
+        </v-slider>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { LMap, LPopup, LTileLayer, LTooltip } from '@vue-leaflet/vue-leaflet'
 import { ref } from 'vue'
 import LHexbinLayer from 'vue-leaflet-hexbin'
-import dataPoints from '../data/points_10k'
+import dataPoints from '@/content/public/data/points_10k'
 
 type Data = { index: number; coords: [number, number, number] }
 const data = ref(

@@ -9,9 +9,6 @@
   ],
   "compilerOptions": {
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
       "leaflet-hexbin": [
         "../leaflet-hexbin/src/index.ts"
       ]

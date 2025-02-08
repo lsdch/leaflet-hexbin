@@ -49,4 +49,4 @@ jobs:
 
       - name: Deploy docs
         working-directory: docs
-        run: 'pnpm build && cp dist/index.html dist/404.html && pnpm gh-pages -d dist/'
+        run: 'pnpm run deploy'

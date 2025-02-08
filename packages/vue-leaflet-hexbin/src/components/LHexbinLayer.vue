@@ -6,16 +6,15 @@
 </template>
 
 <script setup lang="ts" generic="Data">
+import { InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
 import type {} from 'd3'
 import type {} from 'd3-hexbin'
-import { InjectionKeys, Utilities } from '@vue-leaflet/vue-leaflet'
 import type { HexbinData, HexbinLayer } from 'leaflet-hexbin'
 import { hexbinLayerProps, setupHexbinLayer, type LHexbinLayerProps } from '../hexbinLayer'
 
 import {
   markRaw,
   nextTick,
-  onBeforeMount,
   onMounted,
   ref,
   useAttrs,
