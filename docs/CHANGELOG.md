@@ -1,5 +1,11 @@
 # leaflet-hexbin-docs
 
+## 0.1.4
+
+### Patch Changes
+
+- [`fe3a453`](https://github.com/lsdch/leaflet-hexbin/commit/fe3a45328c9c6ca24aefa059fdf1534d4e1b26fb) Thanks [@lsdch](https://github.com/lsdch)! - fix: hover controls in demo
+
 ## 0.1.3
 
 ### Patch Changes
