@@ -3,6 +3,7 @@ import type { PropType, Ref, SetupContext } from 'vue'
 
 import { Functions, Utilities } from '@vue-leaflet/vue-leaflet'
 import type { LatLngExpression, LeafletEventHandlerFnMap } from 'leaflet'
+import { useDebounceFn } from "@vueuse/core"
 const { propsToLeafletOptions } = Utilities
 const { featureGroupProps, setupFeatureGroup } = Functions.FeatureGroup
 
@@ -164,6 +165,10 @@ export const setupHexbinLayer = <Data = LatLngExpression, Events = unknown>(
     featureOptions
   )
 
+  // Debounced redraw function to avoid redrawing on every prop change
+  const debouncedRedraw = useDebounceFn(() => leafletRef.value?.redraw(), 50, { maxWait: 200 })
+
+
   const methods = {
     ...featureGroupMethods,
     bindTooltip(leafletObject: any): void {
@@ -173,36 +178,45 @@ export const setupHexbinLayer = <Data = LatLngExpression, Events = unknown>(
       leafletRef.value?.unbindTooltip()
     },
     setRadius(radius: number) {
-      leafletRef.value?.radius(radius).redraw()
+      leafletRef.value?.radius(radius)
+      debouncedRedraw()
     },
     setDuration(duration: number) {
       leafletRef.value?.duration(duration)
+      debouncedRedraw()
     },
     setOpacity(opacity: number | [number, number]) {
       leafletRef.value?.opacity(opacity)
+      debouncedRedraw()
     },
     setColorScaleExtent(extent: [number, number]) {
       leafletRef.value?.colorScaleExtent(extent)
+      debouncedRedraw()
     },
     setRadiusScaleExtent(extent: [number, number]) {
       leafletRef.value?.radiusScaleExtent(extent)
+      debouncedRedraw()
     },
     setColorRange(range: string[]) {
       leafletRef.value?.colorRange(range)
+      debouncedRedraw()
     },
-    setRadiusRange(range: [number, number]) {
+    setRadiusRange(range: [number, number] | null) {
       leafletRef.value?.radiusRange(range)
+      debouncedRedraw()
     },
 
     /**
      * Binding to data and accessor is done at the same time in component setup
      */
-    // setData(data: Data[]) {
-    //   leafletRef.value?.data(data)
-    // }
-    // setAccessor(accessor: (d: Data) => LatLngExpression) {
-    //   leafletRef.value?.accessor(accessor)
-    // }
+    setData(data: Data[]) {
+      leafletRef.value?.data(data, leafletRef.value._accessor)
+      debouncedRedraw()
+    },
+    setAccessor(accessor: (d: Data) => LatLngExpression) {
+      leafletRef.value?.data(leafletRef.value._data, accessor)
+      debouncedRedraw()
+    }
   }
 
   return { options, methods }

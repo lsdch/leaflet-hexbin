@@ -20,7 +20,6 @@ import {
   useAttrs,
   useSlots,
   watch,
-  watchEffect,
   type EmitFn,
   type SetupContext,
 } from 'vue'
@@ -75,8 +74,15 @@ const hovered = ref<Partial<HexSelection>>({})
 
 onMounted(async () => {
   const { HexbinHoverHandler, hexbinLayer } = await import('leaflet-hexbin')
-  leafletObject.value = markRaw(hexbinLayer<Data>(options))
+  // Initialize leaflet hexbin instance
+  // Automatic redraw on options change is disabled, as it is handled by the component
+  leafletObject.value = markRaw(hexbinLayer<Data>({ ...options, noRedraw: true }))
+
   leafletObject.value.data(props.data ?? [], props.accessor)
+
+  propsBinder(methods, leafletObject.value, props)
+
+  // Bind hover events
   watch(
     () => props.hover,
     (hover) => {
@@ -115,8 +121,6 @@ onMounted(async () => {
       },
     )
 
-  propsBinder(methods, leafletObject.value, props)
-
   addLayer({
     ...props,
     ...methods,
@@ -125,12 +129,5 @@ onMounted(async () => {
 
   ready.value = true
   nextTick(() => context.emit('ready', leafletObject.value!))
-
-  // Bind data and accessor at the same time
-  watchEffect(() => {
-    if (ready.value && leafletObject.value) {
-      leafletObject.value.data(props.data ?? [], props.accessor)
-    }
-  })
 })
 </script>

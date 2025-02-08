@@ -86,6 +86,12 @@ export interface HexbinLayerConfig {
    * @default 'all'
    */
   pointerEvents?: string
+
+  /**
+   * If true, the layer will not be redrawn after data changes and hover handler binding.
+   * @default false
+   */
+  noRedraw?: boolean
 }
 
 /**
@@ -125,6 +131,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     radiusRange: null,
 
     pointerEvents: 'all',
+    noRedraw: false,
     // Handle parent default options
     // ...L.SVG.prototype.options,
     ...L.Renderer.prototype.options,
@@ -614,7 +621,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     this._data = v as Data[] ?? []
     this._accessor = accessor ?? ((d: Data) => d as L.LatLngExpression)
 
-    this.redraw();
+    if (!this.options.noRedraw) this.redraw();
     return this;
   }
 
@@ -629,7 +636,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     if (v === undefined) { return this._hoverHandler; }
     this._hoverHandler = (null != v) ? v : HexbinHoverHandler.none();
 
-    this.redraw();
+    if (!this.options.noRedraw) this.redraw();
 
     return this;
   }
