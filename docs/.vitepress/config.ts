@@ -7,6 +7,7 @@ import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-i
 export default defineConfig({
   title: "Leaflet Hexbin",
   description: "Documentation for leaflet hexbin plugin and associated Vue component",
+  base: "/leaflet-hexbin/",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
