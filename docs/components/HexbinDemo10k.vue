@@ -15,7 +15,7 @@
         :duration
         :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
         @ready="(v) => console.log('ready')"
-        :hover="{ fill: true, scale: 1.5 }"
+        :hover="{ fill: hover.fill, scale: hover.scale.active ? hover.scale.factor : undefined }"
       >
         <template #popup="{ data, layer, event, latLng }">
           <LPopup>
