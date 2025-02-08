@@ -26,7 +26,7 @@ export default defineConfig({
         items: [
           { text: 'Feature showcase', link: '/examples' },
           // { text: 'Runtime API Examples', link: '/api-examples' }
-          { text: "Toy dataset ", target: "_blank", link: "/data/points_10k.ts" }
+          { text: "Toy dataset ", target: "_blank", link: "/leaflet-hexbin/data/points_10k.ts" }
         ]
       }
     ],
