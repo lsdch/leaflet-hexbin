@@ -1,0 +1,1 @@
+import{_ as i,c as a,o as t,aI as n}from"./chunks/framework.H2Qff12-.js";const g=JSON.parse('{"title":"Getting started","description":"","frontmatter":{},"headers":[],"relativePath":"usage.md","filePath":"usage.md"}'),l={name:"usage.md"};function h(p,s,e,k,d,E){return t(),a("div",null,s[0]||(s[0]=[n("",9)]))}const o=i(l,[["render",h]]);export{g as __pageData,o as default};
