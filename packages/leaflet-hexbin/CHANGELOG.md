@@ -1,5 +1,11 @@
 # leaflet-hexbin
 
+## 0.1.2
+
+### Patch Changes
+
+- [`122b9dc`](https://github.com/lsdch/leaflet-hexbin/commit/122b9dc1932d021841f528dc8736dffc1bf43eaf) Thanks [@lsdch](https://github.com/lsdch)! - Fix redraw behavior in vue component
+
 ## 0.1.1
 
 ### Patch Changes
