@@ -1,5 +1,11 @@
 # leaflet-hexbin
 
+## 0.1.3
+
+### Patch Changes
+
+- [`dcc5e82`](https://github.com/lsdch/leaflet-hexbin/commit/dcc5e8296fd46f96947ca90408dbe9af0580c89e) Thanks [@lsdch](https://github.com/lsdch)! - Improved documentation
+
 ## 0.1.2
 
 ### Patch Changes
