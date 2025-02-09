@@ -6,7 +6,9 @@
     "src/**/*.vue",
     "content/**/*.md",
     "../**/README.md",
-    "content/public/data/points_10k.ts"
+    "content/public/data/points_10k.ts",
+    // required for typedoc generator
+    "../packages/leaflet-hexbin/src/**/*",
   ],
   "vueCompilerOptions": {
     "vitePressExtensions": [

@@ -1,0 +1,85 @@
+[
+  {
+    "text": "Namespaces",
+    "collapsed": true,
+    "items": [
+      {
+        "text": "HexbinHoverHandler",
+        "link": "/leaflet-hexbin-api/namespaces/HexbinHoverHandler/",
+        "collapsed": true,
+        "items": [
+          {
+            "text": "Functions",
+            "collapsed": true,
+            "items": [
+              {
+                "text": "resizeFill",
+                "link": "/leaflet-hexbin-api/namespaces/HexbinHoverHandler/functions/resizeFill.md"
+              },
+              {
+                "text": "resizeScale",
+                "link": "/leaflet-hexbin-api/namespaces/HexbinHoverHandler/functions/resizeScale.md"
+              },
+              {
+                "text": "compound",
+                "link": "/leaflet-hexbin-api/namespaces/HexbinHoverHandler/functions/compound.md"
+              },
+              {
+                "text": "none",
+                "link": "/leaflet-hexbin-api/namespaces/HexbinHoverHandler/functions/none.md"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "text": "Classes",
+    "collapsed": true,
+    "items": [
+      {
+        "text": "HexbinLayer",
+        "link": "/leaflet-hexbin-api/classes/HexbinLayer.md"
+      }
+    ]
+  },
+  {
+    "text": "Interfaces",
+    "collapsed": true,
+    "items": [
+      {
+        "text": "HexbinHoverHandler",
+        "link": "/leaflet-hexbin-api/interfaces/HexbinHoverHandler.md"
+      },
+      {
+        "text": "HexbinLayerConfig",
+        "link": "/leaflet-hexbin-api/interfaces/HexbinLayerConfig.md"
+      }
+    ]
+  },
+  {
+    "text": "Type Aliases",
+    "collapsed": true,
+    "items": [
+      {
+        "text": "HexbinData",
+        "link": "/leaflet-hexbin-api/type-aliases/HexbinData.md"
+      },
+      {
+        "text": "TooltipOptions",
+        "link": "/leaflet-hexbin-api/type-aliases/TooltipOptions.md"
+      }
+    ]
+  },
+  {
+    "text": "Functions",
+    "collapsed": true,
+    "items": [
+      {
+        "text": "hexbinLayer",
+        "link": "/leaflet-hexbin-api/functions/hexbinLayer.md"
+      }
+    ]
+  }
+]

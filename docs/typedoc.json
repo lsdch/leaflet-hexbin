@@ -1,0 +1,22 @@
+{
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "typedoc-vitepress-theme",
+    "typedoc-plugin-vue",
+  ],
+  "docsRoot": "./content",
+  "out": "./content/api",
+  "sidebar": {
+    "autoConfiguration": true,
+    "format": "vitepress",
+    "pretty": true,
+    "collapsed": true
+  },
+  "externalPattern": [
+    "**/@types/leaflet/**"
+  ],
+  "excludeExternals": true,
+  "sort": [
+    "visibility",
+  ]
+}

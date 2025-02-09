@@ -2,13 +2,21 @@ import * as d3 from 'd3';
 import type { HexbinData } from './HexbinLayer';
 import { type HexbinLayer } from './HexbinLayer';
 
+/**
+ * Interface for handling hover events on hexbins.
+ */
 export interface HexbinHoverHandler<Data> {
   mouseover(svg: SVGPathElement, hexLayer: HexbinLayer<Data>, event: MouseEvent, data: HexbinData<Data>[]): void;
   mouseout(svg: SVGPathElement, hexLayer: HexbinLayer<Data>, event: MouseEvent, data: HexbinData<Data>[]): void;
 }
 
+/**
+ * Built-in hover handlers for hexbins.
+ */
 export namespace HexbinHoverHandler {
-
+  /**
+   * Resize the hexbin to fill the hexagon grid cell on hover.
+   */
   export function resizeFill(): HexbinHoverHandler<any> {
     return {
       mouseover: function (svg: SVGPathElement, hexLayer: HexbinLayer<any>, event: MouseEvent, data: HexbinData<any>[]) {
@@ -24,18 +32,16 @@ export namespace HexbinHoverHandler {
         o.select<SVGPathElement>('path.hexbin-hexagon')
           .transition().duration(hexLayer.options.duration)
           .attr('d', function (d) {
-            return hexLayer._hexLayout.hexagon(hexLayer._scale.radius(hexLayer._fn.radiusValue.call(hexLayer, d)));
+            return hexLayer._hexLayout.hexagon(hexLayer.radiusScale()(hexLayer.radiusValue()(d)));
           });
       }
     };
 
   }
 
-  export interface ResizeScaleOptions {
-    radiusScale?: number;
-    duration?: number;
-  }
-
+  /**
+   * Resize the hexbin by a scaling factor on hover.
+   */
   export function resizeScale(radiusScale: number = 1.5): HexbinHoverHandler<any> {
 
     // return the handler instance
@@ -45,7 +51,7 @@ export namespace HexbinHoverHandler {
         o.select('path.hexbin-hexagon')
           .transition().duration(hexLayer.options.duration)
           .attr('d', function () {
-            return hexLayer._hexLayout.hexagon(hexLayer._scale.radius.range()[1] * (radiusScale));
+            return hexLayer._hexLayout.hexagon(hexLayer.radiusScale().range()[1] * (radiusScale));
           });
       },
       mouseout: function (svg, hexLayer, event, data) {
@@ -53,13 +59,15 @@ export namespace HexbinHoverHandler {
         o.select('path.hexbin-hexagon')
           .transition().duration(hexLayer.options.duration)
           .attr('d', (d) => {
-            return hexLayer._hexLayout.hexagon(hexLayer._scale.radius(hexLayer._fn.radiusValue.call(hexLayer, d)));
+            return hexLayer._hexLayout.hexagon(hexLayer.radiusScale()(hexLayer.radiusValue()(d)));
           });
       }
     };
   }
 
-
+  /**
+   * Compound multiple hover handlers into a single handler.
+   */
   export function compound<Data>(handlers: HexbinHoverHandler<Data>[] = [none()]): HexbinHoverHandler<Data> {
     return {
       mouseover: function (svg, hexLayer, event, data) {
@@ -71,6 +79,10 @@ export namespace HexbinHoverHandler {
     };
   }
 
+  /**
+   * No hover handler.
+   * @deprecated Will be removed in future versions
+   */
   export function none(): HexbinHoverHandler<any> {
     return {
       mouseover: function () { },

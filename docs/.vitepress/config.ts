@@ -1,7 +1,8 @@
 import { fileURLToPath } from 'url'
-import { PluginOption } from 'vite'
 import { defineConfig } from 'vitepress'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
+
+import sidebarLeafletAPI from '../content/leaflet-hexbin-api/typedoc-sidebar.json'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -22,12 +23,16 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Examples',
+        text: 'Features',
         items: [
-          { text: 'Feature showcase', link: '/examples' },
+          { text: 'Showcase', link: '/examples' },
           // { text: 'Runtime API Examples', link: '/api-examples' }
           { text: "Toy dataset ", target: "_blank", link: "/leaflet-hexbin/data/points_10k.ts" }
         ]
+      },
+      {
+        text: 'Leaflet hexbin API',
+        items: sidebarLeafletAPI,
       }
     ],
 

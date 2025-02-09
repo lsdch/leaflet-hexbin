@@ -205,16 +205,12 @@ export const setupHexbinLayer = <Data = LatLngExpression, Events = unknown>(
       leafletRef.value?.radiusRange(range)
       debouncedRedraw()
     },
-
-    /**
-     * Binding to data and accessor is done at the same time in component setup
-     */
     setData(data: Data[]) {
-      leafletRef.value?.data(data, leafletRef.value._accessor)
+      leafletRef.value?.data(data, leafletRef.value.accessor())
       debouncedRedraw()
     },
     setAccessor(accessor: (d: Data) => LatLngExpression) {
-      leafletRef.value?.data(leafletRef.value._data, accessor)
+      leafletRef.value?.data(leafletRef.value.data(), accessor)
       debouncedRedraw()
     }
   }

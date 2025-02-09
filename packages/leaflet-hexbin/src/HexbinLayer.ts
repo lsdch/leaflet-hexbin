@@ -3,6 +3,11 @@ import { hexbin, type HexbinBin } from 'd3-hexbin';
 import * as L from 'leaflet';
 import HexbinHoverHandler from './HexbinHoverHandler';
 
+/**
+ * @notExported
+ */
+L.SVG
+
 // Need to expose some methods from L.SVG
 declare module 'leaflet' {
   interface SVG {
@@ -11,11 +16,18 @@ declare module 'leaflet' {
   }
 }
 
-type TooltipOptions<Data> = {
+/**
+ * Tooltip definition for the hexbin layer.
+ * This can be used to generate a tooltip for each hexbin, if an external tooltip was not provided using bindTooltip()
+ */
+export type TooltipOptions<Data> = {
   options?: L.TooltipOptions,
   content?: L.Content | ((d: HexbinData<Data>[]) => L.Content)
 }
 
+/**
+ * Hexbin layer configuration options this can be provided when instantiating a new hexbin layer.
+ */
 export interface HexbinLayerConfig {
   /**
    * Hex grid cell radius in pixels.
@@ -100,7 +112,7 @@ export interface HexbinLayerConfig {
 export type HexbinData<Data> = {
   data: Data;
   coord: L.LatLngExpression;
-  point: Readonly<[number, number]>;
+  point: Readonly<L.Point>;
 }
 
 
@@ -113,10 +125,13 @@ function isLatLngExpression(d: any): d is L.LatLngExpression {
 }
 
 /**
- * Instantiate a hexbin layer.
+ * A layer for displaying binned data in a hexagon grid on a Leaflet map.
  * Extends L.SVG to take advantage of built-in zoom animations.
  */
 export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
+  /**
+   * Default options for the hexbin layer
+   */
   options: Required<HexbinLayerConfig> & L.RendererOptions = {
     radius: 12,
     opacity: 0.6,
@@ -137,9 +152,11 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     ...L.Renderer.prototype.options,
     ...L.Layer.prototype.options
   }
-  _fn = {
-    lng: (d: Data) => L.latLng(this._accessor(d)).lng,
-    lat: (d: Data) => L.latLng(this._accessor(d)).lat,
+
+  /**
+   * Internal functions to access the data
+   */
+  protected _fn = {
     colorValue: (d: HexbinData<Data>[]) => d.length,
     radiusValue: (d: HexbinData<Data>[]) => d.length,
     opacityValue: (d: HexbinData<Data>[]) => d.length,
@@ -148,7 +165,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
       return (null != val) ? this._scale.color(val) : 'none';
     }
   }
-  // Set up the customizable scale
+  /**
+   * D3 scales used for the hexbin layer
+   */
   _scale = {
     color: scaleLinear<string, string>(),
     radius: scaleLinear(),
@@ -156,30 +175,30 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   };
 
   // Set up the Dispatcher for managing events and callbacks
-  _dispatch = dispatch<SVGPathElement>('mouseover', 'mouseout', 'click');
+  protected _dispatch = dispatch<SVGPathElement>('mouseover', 'mouseout', 'click');
 
   // Set up the default hover handler
-  _hoverHandler: HexbinHoverHandler<Data> = HexbinHoverHandler.none();
+  protected _hoverHandler: HexbinHoverHandler<Data> = HexbinHoverHandler.none();
 
   // Create the hex layout
   _hexLayout = hexbin<HexbinData<Data>>()
     .radius(this.options.radius)
-    .x(({ point: [x, _] }) => x)
-    .y(({ point: [_, y] }) => y);
+    .x(({ point: { x } }) => x)
+    .y(({ point: { y } }) => y);
 
   // Initialize the data array to be empty
-  _data = Array<Data>()
+  protected _data = Array<Data>()
 
 
-  declare _map: L.Map;
+  declare protected _map: L.Map;
 
-  _tooltipOptions: TooltipOptions<Data> = {};
-  declare _tooltip: L.Tooltip | undefined;
+  protected _tooltipOptions: TooltipOptions<Data> = {};
+  declare protected _tooltip: L.Tooltip | undefined;
 
-  declare _container: SVGElementTagNameMap['svg'];
+  // declare _container: SVGElementTagNameMap['svg'];
 
   // declare _container: HTMLElement;
-  declare _d3Container: d3.Selection<SVGGElement, unknown, null, undefined>;
+  declare protected _d3Container: d3.Selection<SVGGElement, unknown, null, undefined>;
 
   public constructor(options?: HexbinLayerConfig) {
     super()
@@ -202,7 +221,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
   };
 
-  _accessor(d: Data) {
+  protected _accessor(d: Data) {
     return d as L.LatLngExpression;
   }
 
@@ -232,11 +251,6 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this
   }
 
-  _project(latlng: L.LatLngExpression) {
-    const { x, y } = this._map.latLngToLayerPoint(latlng);
-    return [x, y] as const;
-  }
-
   /**
   * Callback made by Leaflet when the layer is removed from the map
   * @param map Reference to the map from which this layer is being removed
@@ -251,17 +265,15 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
   /**
   * Clean up the svg container
-  * @private
   */
-  _destroyContainer() {
+  protected _destroyContainer() {
     select(this._container).remove();
   }
 
   /**
    * (Re)draws the hexbins data on the container
-   * @private
    */
-  redraw() {
+  public redraw() {
     const that = this;
 
     if (!that._map) return
@@ -269,7 +281,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     // Generate the mapped version of the data
     const data = that._data.map<HexbinData<Data>>((d: Data) => {
       const coord = that._accessor(d)
-      const point = that._project(coord);
+      const point = that._map.latLngToLayerPoint(coord);
       return { coord: coord, point, data: d };
     });
 
@@ -293,7 +305,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
   }
 
-  _linearlySpace(from: number, to: number, length: number): number[] {
+  protected _linearlySpace(from: number, to: number, length: number): number[] {
     const step = (to - from) / Math.max(length - 1, 1);
     return Array.from({ length }, (_, i) => from + (i * step));
   }
@@ -461,6 +473,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   // Public API
   // ------------------------------------
 
+  /**
+   * Get or set the radius of the hexagon grid cells
+   */
   radius(): number;
   radius(v: number): this;
   radius(v?: number): this | number {
@@ -476,6 +491,11 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+
+  /**
+   * Get or set the opacity of the hexbin layer
+   * @param v The opacity value to set. If an array is provided, the first element is the minimum opacity and the second is the maximum.
+   */
   opacity(): number | [number, number];
   opacity(v: number | [number, number]): this;
   opacity(v?: number | [number, number]): this | number | [number, number] {
@@ -486,6 +506,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the duration of transition animations
+   */
   duration(): number;
   duration(v: number): this;
   duration(v?: number): this | number {
@@ -495,6 +518,10 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the color scale domain extent
+   * @param v The color scale extent to set. If an array is provided, the first element is the minimum extent and the second is the maximum. This means that for the purpose of color interpolation, the domain will be clipped to this extent, i.e. values below the minimum will be treated as the minimum, and values above the maximum will be treated as the maximum.
+   */
   colorScaleExtent(): [number, number | undefined];
   colorScaleExtent(v: [number, number | undefined]): this;
   colorScaleExtent(v?: [number, number | undefined]): this | [number, number | undefined] {
@@ -504,6 +531,10 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the radius scale domain extent
+   * @param v The radius scale extent to set. If an array is provided, the first element is the minimum extent and the second is the maximum. This means that for the purpose of radius interpolation, the domain will be clipped to this extent, i.e. values below the minimum will be treated as the minimum, and values above the maximum will be treated as the maximum.
+   */
   radiusScaleExtent(): [number, number | undefined];
   radiusScaleExtent(v: [number, number | undefined]): this;
   radiusScaleExtent(v?: [number, number | undefined]): this | [number, number | undefined] {
@@ -513,6 +544,10 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the opacity scale domain extent
+   * @param v The opacity scale extent to set. If an array is provided, the first element is the minimum extent and the second is the maximum. This means that for the purpose of opacity interpolation, the domain will be clipped to this extent, i.e. values below the minimum will be treated as the minimum, and values above the maximum will be treated as the maximum.
+   */
   opacityScaleExtent(): [number, number | undefined];
   opacityScaleExtent(v: [number, number | undefined]): this;
   opacityScaleExtent(v?: [number, number | undefined]): this | [number, number | undefined] {
@@ -523,6 +558,10 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   }
 
 
+  /**
+   * Get or set the color scale range
+   * @param v The color range to set. Colors will be interpolated between all provided colors.
+   */
   colorRange(): string[];
   colorRange(v: string[]): this;
   colorRange(v?: string[]): this | string[] {
@@ -533,6 +572,10 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the radius scale range
+   * @param v The min and max radius range to set. If null, the range will be set to the hexagon grid cell radius value.
+   */
   radiusRange(): [number, number] | null;
   radiusRange(v: [number, number] | null): this;
   radiusRange(v?: [number, number] | null): this | [number, number] | null {
@@ -543,6 +586,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the color scale domain
+   */
   colorScale(): d3.ScaleLinear<string, string>;
   colorScale(v: d3.ScaleLinear<string, string>): this;
   colorScale(v?: d3.ScaleLinear<string, string>) {
@@ -551,6 +597,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the radius scale domain
+   */
   radiusScale(): d3.ScaleLinear<number, number>;
   radiusScale(v: d3.ScaleLinear<number, number>): this;
   radiusScale(v?: d3.ScaleLinear<number, number>): this | d3.ScaleLinear<number, number> {
@@ -559,24 +608,11 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
-  lng(): (d: Data) => number;
-  lng(v: (d: Data) => number): this;
-  lng(v?: (d: Data) => number) {
-    if (v === undefined) { return this._fn.lng; }
-    this._fn.lng = v;
-
-    return this;
-  }
-
-  lat(): (d: Data) => number;
-  lat(v: (d: Data) => number): this;
-  lat(v?: (d: Data) => number) {
-    if (v === undefined) { return this._fn.lat; }
-    this._fn.lat = v;
-
-    return this;
-  }
-
+  /**
+   * Get or set the value mapper for the color scale
+   * @param v The value mapper to set. This function should accept an array of hexbin data and return a number to be used for color interpolation.
+   * @default the length of the data in the hexbin
+   */
   colorValue(): (d: HexbinData<Data>[]) => number;
   colorValue(v: (d: HexbinData<Data>[]) => number): this;
   colorValue(v?: (d: HexbinData<Data>[]) => number) {
@@ -586,6 +622,11 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the value mapper for the radius scale
+   * @param v The value mapper to set. This function should return a number for each bin, which will be used to determine the radius of the hexagon.
+   * @default the length of the data in the hexbin
+   */
   radiusValue(): (d: HexbinData<Data>[]) => number;
   radiusValue(v: (d: HexbinData<Data>[]) => number): this;
   radiusValue(v?: (d: HexbinData<Data>[]) => number) {
@@ -595,6 +636,11 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the value mapper for the fill color of the hexbins
+   * @param v The value mapper to set. This function should return a string to be used as the fill color for the hexbin.
+   * @default a color interpolated from the color scale based on the value returned by the colorValue function
+   */
   fill(): (d: HexbinData<Data>[]) => string;
   fill(v: (d: HexbinData<Data>[]) => string): this;
   fill(v?: (d: HexbinData<Data>[]) => string) {
@@ -604,6 +650,12 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the data to be binned by the hexbin layer.
+   * Triggers a redraw of the hexbins when set.
+   * @param v The data to set. This should be an array of data to be binned.
+   * @param accessor An optional function to convert the data into a LatLngExpression. If not provided, the data is assumed to be an array of LatLngExpressions.
+   */
   data(): Data[];
   data(v: Data extends L.LatLngExpression ? Data[] : never): this;
   data(v: Data[], accessor?: (d: Data) => L.LatLngExpression): this;
@@ -625,11 +677,18 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  accessor(): (d: Data) => L.LatLngExpression {
+    return this._accessor;
+  }
+
   /*
-   * Getter for the event dispatcher
+   * Getter for the D3 event dispatcher
    */
   dispatch() { return this._dispatch }
 
+  /**
+   * Get or set the hover handler for the hexbin layer.
+   */
   hoverHandler(): HexbinHoverHandler<Data>;
   hoverHandler(v: HexbinHoverHandler<Data>): this;
   hoverHandler(v?: HexbinHoverHandler<Data>): this | HexbinHoverHandler<Data> {
@@ -641,6 +700,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this;
   }
 
+  /**
+   * Get or set the tooltip content and options for the hexbin layer.
+   */
   // Cannot overload bindTooltip() with data dependant content
   tooltip(tooltip: TooltipOptions<Data>): this {
     this._tooltipOptions = tooltip;
@@ -652,10 +714,17 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this
   }
 
+  /**
+   * Get the tooltip instance attached to the hexbin layer
+   */
   getTooltip(): L.Tooltip | undefined {
     return this._tooltip
   }
 
+  /**
+   * Bind a tooltip to the hexbin layer with the provided content and options.
+   * Useful to bind an existing tooltip instance to the hexbin layer.
+   */
   bindTooltip(content: L.Tooltip | L.Content, options?: L.TooltipOptions): this {
     if (content instanceof L.Tooltip) {
       this._tooltip = content;
@@ -670,6 +739,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     return this
   }
 
+  /**
+   * Unbind the tooltip from the hexbin layer
+   */
   unbindTooltip(): this {
     this._tooltip?.remove();
     this._tooltip = undefined;
@@ -680,11 +752,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
    * Returns an array of the points in the path, or nested arrays of points in case of multi-polyline.
    */
   getLatLngs() {
-    const that = this;
-
     // Map the data into an array of latLngs using the configured lat/lng accessors
-    return this._data.map(function (d) {
-      return L.latLng(that._fn.lat(d), that._fn.lng(d));
+    return this._data.map((d) => {
+      return L.latLng(this._accessor(d));
     });
   }
   /*
