@@ -4,7 +4,7 @@
 
 > **compound**\<`Data`\>(`handlers`): [`HexbinHoverHandler`](../../../interfaces/HexbinHoverHandler.md)\<`Data`\>
 
-Defined in: [HexbinHoverHandler.ts:71](https://github.com/lsdch/leaflet-hexbin/blob/69b3ec62effd1d4ba4504ed82a02cde95815b10a/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L71)
+Defined in: [HexbinHoverHandler.ts:71](https://github.com/lsdch/leaflet-hexbin/blob/b02fe5f1f943f4751a95997daaace5cd426f6fd5/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L71)
 
 Compound multiple hover handlers into a single handler.
 
