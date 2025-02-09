@@ -1,5 +1,11 @@
 # leaflet-hexbin-docs
 
+## 0.1.7
+
+### Patch Changes
+
+- [`e2b7203`](https://github.com/lsdch/leaflet-hexbin/commit/e2b720325181d81c5f275d3289caeb47e903396b) Thanks [@lsdch](https://github.com/lsdch)! - Upgrade vitepress to v2 alpha
+
 ## 0.1.6
 
 ### Patch Changes
