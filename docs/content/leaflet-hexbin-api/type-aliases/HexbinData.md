@@ -4,7 +4,7 @@
 
 > **HexbinData**\<`Data`\>: `object`
 
-Defined in: [HexbinLayer.ts:112](https://github.com/lsdch/leaflet-hexbin/blob/b02fe5f1f943f4751a95997daaace5cd426f6fd5/packages/leaflet-hexbin/src/HexbinLayer.ts#L112)
+Defined in: [HexbinLayer.ts:112](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L112)
 
 Hexbin data attached to each hexagon, once binned.
 

@@ -124,6 +124,22 @@ function isLatLngExpression(d: any): d is L.LatLngExpression {
   )
 }
 
+const debounce = <T extends unknown[]>(
+  callback: (...args: T) => void,
+  delay: number,
+) => {
+  let timeoutTimer: ReturnType<typeof setTimeout>;
+
+  return function (...args: T) {
+    clearTimeout(timeoutTimer);
+
+    timeoutTimer = setTimeout(() => {
+      callback(...args);
+    }, delay);
+  };
+};
+
+
 /**
  * A layer for displaying binned data in a hexagon grid on a Leaflet map.
  * Extends L.SVG to take advantage of built-in zoom animations.
@@ -245,7 +261,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     this._map = map;
     this._tooltip?.setLatLng([0, 0]).addTo(map);
     // Redraw on moveend
-    map.on('moveend', this.redraw, this);
+    map.on('moveend', debounce(() => this.redraw(), 100));
     // Initial draw
     this.redraw();
     return this
