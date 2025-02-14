@@ -1,5 +1,11 @@
 # leaflet-hexbin
 
+## 0.1.4
+
+### Patch Changes
+
+- [`4a0a38e`](https://github.com/lsdch/leaflet-hexbin/commit/4a0a38ed8ef98c87c1154b4eeb12bdb65175a2e3) Thanks [@lsdch](https://github.com/lsdch)! - debounce redraw on map move
+
 ## 0.1.3
 
 ### Patch Changes
