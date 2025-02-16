@@ -4,7 +4,7 @@
 
 > **TooltipOptions**\<`Data`\>: `object`
 
-Defined in: [HexbinLayer.ts:23](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L23)
+Defined in: [HexbinLayer.ts:23](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L23)
 
 Tooltip definition for the hexbin layer.
 This can be used to generate a tooltip for each hexbin, if an external tooltip was not provided using bindTooltip()

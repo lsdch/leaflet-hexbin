@@ -2,7 +2,7 @@
 
 # Class: HexbinLayer\<Data\>
 
-Defined in: [HexbinLayer.ts:147](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L147)
+Defined in: [HexbinLayer.ts:147](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L147)
 
 A layer for displaying binned data in a hexagon grid on a Leaflet map.
 Extends L.SVG to take advantage of built-in zoom animations.
@@ -21,7 +21,7 @@ Extends L.SVG to take advantage of built-in zoom animations.
 
 > **new HexbinLayer**\<`Data`\>(`options`?): [`HexbinLayer`](HexbinLayer.md)\<`Data`\>
 
-Defined in: [HexbinLayer.ts:219](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L219)
+Defined in: [HexbinLayer.ts:219](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L219)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [HexbinLayer.ts:219](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **options**: `Required`\<[`HexbinLayerConfig`](../interfaces/HexbinLayerConfig.md)\> & `RendererOptions`
 
-Defined in: [HexbinLayer.ts:151](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L151)
+Defined in: [HexbinLayer.ts:151](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L151)
 
 Default options for the hexbin layer
 
@@ -57,7 +57,7 @@ Default options for the hexbin layer
 
 > **\_scale**: `object`
 
-Defined in: [HexbinLayer.ts:187](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L187)
+Defined in: [HexbinLayer.ts:187](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L187)
 
 D3 scales used for the hexbin layer
 
@@ -79,7 +79,7 @@ D3 scales used for the hexbin layer
 
 > **\_hexLayout**: `Hexbin`\<[`HexbinData`](../type-aliases/HexbinData.md)\<`Data`\>\>
 
-Defined in: [HexbinLayer.ts:200](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L200)
+Defined in: [HexbinLayer.ts:200](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L200)
 
 ***
 
@@ -87,7 +87,7 @@ Defined in: [HexbinLayer.ts:200](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **\_container**: `SVGSVGElement`
 
-Defined in: [HexbinLayer.ts:15](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L15)
+Defined in: [HexbinLayer.ts:15](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L15)
 
 #### Inherited from
 
@@ -99,7 +99,7 @@ Defined in: [HexbinLayer.ts:15](https://github.com/lsdch/leaflet-hexbin/blob/e2b
 
 > `protected` **\_fn**: `object`
 
-Defined in: [HexbinLayer.ts:175](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L175)
+Defined in: [HexbinLayer.ts:175](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L175)
 
 Internal functions to access the data
 
@@ -165,7 +165,7 @@ Internal functions to access the data
 
 > `protected` **\_dispatch**: `Dispatch`\<`SVGPathElement`\>
 
-Defined in: [HexbinLayer.ts:194](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L194)
+Defined in: [HexbinLayer.ts:194](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L194)
 
 ***
 
@@ -173,7 +173,7 @@ Defined in: [HexbinLayer.ts:194](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > `protected` **\_hoverHandler**: [`HexbinHoverHandler`](../interfaces/HexbinHoverHandler.md)\<`Data`\>
 
-Defined in: [HexbinLayer.ts:197](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L197)
+Defined in: [HexbinLayer.ts:197](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L197)
 
 ***
 
@@ -181,7 +181,7 @@ Defined in: [HexbinLayer.ts:197](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > `protected` **\_data**: `Data`[]
 
-Defined in: [HexbinLayer.ts:206](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L206)
+Defined in: [HexbinLayer.ts:206](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L206)
 
 ***
 
@@ -189,7 +189,7 @@ Defined in: [HexbinLayer.ts:206](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > `protected` **\_map**: `Map`
 
-Defined in: [HexbinLayer.ts:209](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L209)
+Defined in: [HexbinLayer.ts:209](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L209)
 
 #### Overrides
 
@@ -201,7 +201,7 @@ Defined in: [HexbinLayer.ts:209](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > `protected` **\_tooltipOptions**: [`TooltipOptions`](../type-aliases/TooltipOptions.md)\<`Data`\> = `{}`
 
-Defined in: [HexbinLayer.ts:211](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L211)
+Defined in: [HexbinLayer.ts:211](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L211)
 
 ***
 
@@ -209,7 +209,7 @@ Defined in: [HexbinLayer.ts:211](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > `protected` **\_tooltip**: `undefined` \| `Tooltip`
 
-Defined in: [HexbinLayer.ts:212](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L212)
+Defined in: [HexbinLayer.ts:212](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L212)
 
 ***
 
@@ -217,7 +217,7 @@ Defined in: [HexbinLayer.ts:212](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > `protected` **\_d3Container**: `Selection`\<`SVGGElement`, `unknown`, `null`, `undefined`\>
 
-Defined in: [HexbinLayer.ts:217](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L217)
+Defined in: [HexbinLayer.ts:217](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L217)
 
 ## Methods
 
@@ -225,7 +225,7 @@ Defined in: [HexbinLayer.ts:217](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **onAdd**(`map`): `this`
 
-Defined in: [HexbinLayer.ts:256](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L256)
+Defined in: [HexbinLayer.ts:256](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L256)
 
 Callback made by Leaflet when the layer is added to the map
 
@@ -251,7 +251,7 @@ Reference to the map to which this layer has been added
 
 > **onRemove**(`map`): `this`
 
-Defined in: [HexbinLayer.ts:274](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L274)
+Defined in: [HexbinLayer.ts:274](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L274)
 
 Callback made by Leaflet when the layer is removed from the map
 
@@ -277,7 +277,7 @@ Reference to the map from which this layer is being removed
 
 > **redraw**(): `void`
 
-Defined in: [HexbinLayer.ts:292](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L292)
+Defined in: [HexbinLayer.ts:292](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L292)
 
 (Re)draws the hexbins data on the container
 
@@ -291,7 +291,7 @@ Defined in: [HexbinLayer.ts:292](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **\_createHexagons**(`g`, `data`): `void`
 
-Defined in: [HexbinLayer.ts:329](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L329)
+Defined in: [HexbinLayer.ts:329](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L329)
 
 #### Parameters
 
@@ -313,7 +313,7 @@ Defined in: [HexbinLayer.ts:329](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **\_getExtent**(`bins`, `valueFn`, `scaleExtent`): \[`number`, `number`\]
 
-Defined in: [HexbinLayer.ts:468](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L468)
+Defined in: [HexbinLayer.ts:468](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L468)
 
 #### Parameters
 
@@ -341,7 +341,7 @@ Defined in: [HexbinLayer.ts:468](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **radius**(): `number`
 
-Defined in: [HexbinLayer.ts:495](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L495)
+Defined in: [HexbinLayer.ts:495](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L495)
 
 Get or set the radius of the hexagon grid cells
 
@@ -353,7 +353,7 @@ Get or set the radius of the hexagon grid cells
 
 > **radius**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:496](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L496)
+Defined in: [HexbinLayer.ts:496](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L496)
 
 Get or set the radius of the hexagon grid cells
 
@@ -375,7 +375,7 @@ Get or set the radius of the hexagon grid cells
 
 > **opacity**(): `number` \| \[`number`, `number`\]
 
-Defined in: [HexbinLayer.ts:515](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L515)
+Defined in: [HexbinLayer.ts:515](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L515)
 
 Get or set the opacity of the hexbin layer
 
@@ -387,7 +387,7 @@ Get or set the opacity of the hexbin layer
 
 > **opacity**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:516](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L516)
+Defined in: [HexbinLayer.ts:516](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L516)
 
 Get or set the opacity of the hexbin layer
 
@@ -411,7 +411,7 @@ The opacity value to set. If an array is provided, the first element is the mini
 
 > **duration**(): `number`
 
-Defined in: [HexbinLayer.ts:528](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L528)
+Defined in: [HexbinLayer.ts:528](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L528)
 
 Get or set the duration of transition animations
 
@@ -423,7 +423,7 @@ Get or set the duration of transition animations
 
 > **duration**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:529](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L529)
+Defined in: [HexbinLayer.ts:529](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L529)
 
 Get or set the duration of transition animations
 
@@ -445,7 +445,7 @@ Get or set the duration of transition animations
 
 > **colorScaleExtent**(): \[`number`, `undefined` \| `number`\]
 
-Defined in: [HexbinLayer.ts:541](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L541)
+Defined in: [HexbinLayer.ts:541](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L541)
 
 Get or set the color scale domain extent
 
@@ -457,7 +457,7 @@ Get or set the color scale domain extent
 
 > **colorScaleExtent**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:542](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L542)
+Defined in: [HexbinLayer.ts:542](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L542)
 
 Get or set the color scale domain extent
 
@@ -481,7 +481,7 @@ The color scale extent to set. If an array is provided, the first element is the
 
 > **radiusScaleExtent**(): \[`number`, `undefined` \| `number`\]
 
-Defined in: [HexbinLayer.ts:554](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L554)
+Defined in: [HexbinLayer.ts:554](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L554)
 
 Get or set the radius scale domain extent
 
@@ -493,7 +493,7 @@ Get or set the radius scale domain extent
 
 > **radiusScaleExtent**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:555](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L555)
+Defined in: [HexbinLayer.ts:555](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L555)
 
 Get or set the radius scale domain extent
 
@@ -517,7 +517,7 @@ The radius scale extent to set. If an array is provided, the first element is th
 
 > **opacityScaleExtent**(): \[`number`, `undefined` \| `number`\]
 
-Defined in: [HexbinLayer.ts:567](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L567)
+Defined in: [HexbinLayer.ts:567](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L567)
 
 Get or set the opacity scale domain extent
 
@@ -529,7 +529,7 @@ Get or set the opacity scale domain extent
 
 > **opacityScaleExtent**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:568](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L568)
+Defined in: [HexbinLayer.ts:568](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L568)
 
 Get or set the opacity scale domain extent
 
@@ -553,7 +553,7 @@ The opacity scale extent to set. If an array is provided, the first element is t
 
 > **colorRange**(): `string`[]
 
-Defined in: [HexbinLayer.ts:581](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L581)
+Defined in: [HexbinLayer.ts:581](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L581)
 
 Get or set the color scale range
 
@@ -565,7 +565,7 @@ Get or set the color scale range
 
 > **colorRange**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:582](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L582)
+Defined in: [HexbinLayer.ts:582](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L582)
 
 Get or set the color scale range
 
@@ -589,7 +589,7 @@ The color range to set. Colors will be interpolated between all provided colors.
 
 > **radiusRange**(): `null` \| \[`number`, `number`\]
 
-Defined in: [HexbinLayer.ts:595](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L595)
+Defined in: [HexbinLayer.ts:595](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L595)
 
 Get or set the radius scale range
 
@@ -601,7 +601,7 @@ Get or set the radius scale range
 
 > **radiusRange**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:596](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L596)
+Defined in: [HexbinLayer.ts:596](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L596)
 
 Get or set the radius scale range
 
@@ -625,7 +625,7 @@ The min and max radius range to set. If null, the range will be set to the hexag
 
 > **colorScale**(): `ScaleLinear`\<`string`, `string`\>
 
-Defined in: [HexbinLayer.ts:608](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L608)
+Defined in: [HexbinLayer.ts:608](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L608)
 
 Get or set the color scale domain
 
@@ -637,7 +637,7 @@ Get or set the color scale domain
 
 > **colorScale**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:609](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L609)
+Defined in: [HexbinLayer.ts:609](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L609)
 
 Get or set the color scale domain
 
@@ -659,7 +659,7 @@ Get or set the color scale domain
 
 > **radiusScale**(): `ScaleLinear`\<`number`, `number`\>
 
-Defined in: [HexbinLayer.ts:619](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L619)
+Defined in: [HexbinLayer.ts:619](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L619)
 
 Get or set the radius scale domain
 
@@ -671,7 +671,7 @@ Get or set the radius scale domain
 
 > **radiusScale**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:620](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L620)
+Defined in: [HexbinLayer.ts:620](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L620)
 
 Get or set the radius scale domain
 
@@ -693,7 +693,7 @@ Get or set the radius scale domain
 
 > **colorValue**(): (`d`) => `number`
 
-Defined in: [HexbinLayer.ts:632](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L632)
+Defined in: [HexbinLayer.ts:632](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L632)
 
 Get or set the value mapper for the color scale
 
@@ -721,7 +721,7 @@ the length of the data in the hexbin
 
 > **colorValue**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:633](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L633)
+Defined in: [HexbinLayer.ts:633](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L633)
 
 Get or set the value mapper for the color scale
 
@@ -751,7 +751,7 @@ the length of the data in the hexbin
 
 > **radiusValue**(): (`d`) => `number`
 
-Defined in: [HexbinLayer.ts:646](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L646)
+Defined in: [HexbinLayer.ts:646](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L646)
 
 Get or set the value mapper for the radius scale
 
@@ -779,7 +779,7 @@ the length of the data in the hexbin
 
 > **radiusValue**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:647](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L647)
+Defined in: [HexbinLayer.ts:647](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L647)
 
 Get or set the value mapper for the radius scale
 
@@ -809,7 +809,7 @@ the length of the data in the hexbin
 
 > **fill**(): (`d`) => `string`
 
-Defined in: [HexbinLayer.ts:660](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L660)
+Defined in: [HexbinLayer.ts:660](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L660)
 
 Get or set the value mapper for the fill color of the hexbins
 
@@ -837,7 +837,7 @@ a color interpolated from the color scale based on the value returned by the col
 
 > **fill**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:661](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L661)
+Defined in: [HexbinLayer.ts:661](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L661)
 
 Get or set the value mapper for the fill color of the hexbins
 
@@ -867,7 +867,7 @@ a color interpolated from the color scale based on the value returned by the col
 
 > **data**(): `Data`[]
 
-Defined in: [HexbinLayer.ts:675](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L675)
+Defined in: [HexbinLayer.ts:675](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L675)
 
 Get or set the data to be binned by the hexbin layer.
 Triggers a redraw of the hexbins when set.
@@ -880,7 +880,7 @@ Triggers a redraw of the hexbins when set.
 
 > **data**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:676](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L676)
+Defined in: [HexbinLayer.ts:676](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L676)
 
 Get or set the data to be binned by the hexbin layer.
 Triggers a redraw of the hexbins when set.
@@ -901,7 +901,7 @@ The data to set. This should be an array of data to be binned.
 
 > **data**(`v`, `accessor`?): `this`
 
-Defined in: [HexbinLayer.ts:677](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L677)
+Defined in: [HexbinLayer.ts:677](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L677)
 
 Get or set the data to be binned by the hexbin layer.
 Triggers a redraw of the hexbins when set.
@@ -930,7 +930,7 @@ An optional function to convert the data into a LatLngExpression. If not provide
 
 > **accessor**(): (`d`) => `LatLngExpression`
 
-Defined in: [HexbinLayer.ts:696](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L696)
+Defined in: [HexbinLayer.ts:696](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L696)
 
 #### Returns
 
@@ -952,7 +952,7 @@ Defined in: [HexbinLayer.ts:696](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **dispatch**(): `Dispatch`\<`SVGPathElement`\>
 
-Defined in: [HexbinLayer.ts:703](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L703)
+Defined in: [HexbinLayer.ts:703](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L703)
 
 #### Returns
 
@@ -966,7 +966,7 @@ Defined in: [HexbinLayer.ts:703](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **hoverHandler**(): [`HexbinHoverHandler`](../interfaces/HexbinHoverHandler.md)\<`Data`\>
 
-Defined in: [HexbinLayer.ts:708](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L708)
+Defined in: [HexbinLayer.ts:708](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L708)
 
 Get or set the hover handler for the hexbin layer.
 
@@ -978,7 +978,7 @@ Get or set the hover handler for the hexbin layer.
 
 > **hoverHandler**(`v`): `this`
 
-Defined in: [HexbinLayer.ts:709](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L709)
+Defined in: [HexbinLayer.ts:709](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L709)
 
 Get or set the hover handler for the hexbin layer.
 
@@ -998,7 +998,7 @@ Get or set the hover handler for the hexbin layer.
 
 > **tooltip**(`tooltip`): `this`
 
-Defined in: [HexbinLayer.ts:723](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L723)
+Defined in: [HexbinLayer.ts:723](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L723)
 
 Get or set the tooltip content and options for the hexbin layer.
 
@@ -1018,7 +1018,7 @@ Get or set the tooltip content and options for the hexbin layer.
 
 > **getTooltip**(): `undefined` \| `Tooltip`
 
-Defined in: [HexbinLayer.ts:736](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L736)
+Defined in: [HexbinLayer.ts:736](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L736)
 
 Get the tooltip instance attached to the hexbin layer
 
@@ -1036,7 +1036,7 @@ Get the tooltip instance attached to the hexbin layer
 
 > **bindTooltip**(`content`, `options`?): `this`
 
-Defined in: [HexbinLayer.ts:744](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L744)
+Defined in: [HexbinLayer.ts:744](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L744)
 
 Bind a tooltip to the hexbin layer with the provided content and options.
 Useful to bind an existing tooltip instance to the hexbin layer.
@@ -1065,7 +1065,7 @@ Useful to bind an existing tooltip instance to the hexbin layer.
 
 > **unbindTooltip**(): `this`
 
-Defined in: [HexbinLayer.ts:761](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L761)
+Defined in: [HexbinLayer.ts:761](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L761)
 
 Unbind the tooltip from the hexbin layer
 
@@ -1083,7 +1083,7 @@ Unbind the tooltip from the hexbin layer
 
 > **getLatLngs**(): `LatLng`[]
 
-Defined in: [HexbinLayer.ts:770](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L770)
+Defined in: [HexbinLayer.ts:770](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L770)
 
 #### Returns
 
@@ -1095,7 +1095,7 @@ Defined in: [HexbinLayer.ts:770](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > **toGeoJSON**(): `Feature`\<`MultiPoint`, `LatLng`\>
 
-Defined in: [HexbinLayer.ts:779](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L779)
+Defined in: [HexbinLayer.ts:779](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L779)
 
 #### Returns
 
@@ -1107,7 +1107,7 @@ Defined in: [HexbinLayer.ts:779](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > `protected` **\_accessor**(`d`): `LatLngExpression`
 
-Defined in: [HexbinLayer.ts:240](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L240)
+Defined in: [HexbinLayer.ts:240](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L240)
 
 #### Parameters
 
@@ -1125,7 +1125,7 @@ Defined in: [HexbinLayer.ts:240](https://github.com/lsdch/leaflet-hexbin/blob/e2
 
 > `protected` **\_destroyContainer**(): `void`
 
-Defined in: [HexbinLayer.ts:285](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L285)
+Defined in: [HexbinLayer.ts:285](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L285)
 
 Clean up the svg container
 
@@ -1139,7 +1139,7 @@ Clean up the svg container
 
 > `protected` **\_linearlySpace**(`from`, `to`, `length`): `number`[]
 
-Defined in: [HexbinLayer.ts:324](https://github.com/lsdch/leaflet-hexbin/blob/e2b720325181d81c5f275d3289caeb47e903396b/packages/leaflet-hexbin/src/HexbinLayer.ts#L324)
+Defined in: [HexbinLayer.ts:324](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinLayer.ts#L324)
 
 #### Parameters
 

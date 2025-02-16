@@ -19,7 +19,7 @@ import {
   ref,
   useAttrs,
   useSlots,
-  watch,
+  watchEffect,
   type EmitFn,
   type SetupContext,
 } from 'vue'
@@ -83,17 +83,14 @@ onMounted(async () => {
   propsBinder(methods, leafletObject.value, props)
 
   // Bind hover events
-  watch(
-    () => props.hover,
-    (hover) => {
-      if (!leafletObject.value) return
-      const handlers = []
-      if (hover?.fill) handlers.push(HexbinHoverHandler.resizeFill())
-      if (hover?.scale) handlers.push(HexbinHoverHandler.resizeScale(hover.scale))
-      leafletObject.value.hoverHandler(HexbinHoverHandler.compound(handlers))
-    },
-    { immediate: true },
-  )
+  watchEffect(() => {
+    if (!leafletObject.value) return
+    const handlers = []
+    if (props.hoverFill) handlers.push(HexbinHoverHandler.resizeFill())
+    if (props.hoverScale) handlers.push(HexbinHoverHandler.resizeScale(props.hoverScale))
+    leafletObject.value.hoverHandler(HexbinHoverHandler.compound(handlers)).redraw()
+  })
+
   // Bind events
   leafletObject.value
     .dispatch()

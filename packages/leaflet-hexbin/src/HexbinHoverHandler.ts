@@ -40,7 +40,8 @@ export namespace HexbinHoverHandler {
   }
 
   /**
-   * Resize the hexbin by a scaling factor on hover.
+   * Resize the hexbin by a scaling factor applied to the maximum hex radius.
+   * Use a scaling factor of 1 to grow/shrink the hexbin to the edge of the cell.
    */
   export function resizeScale(radiusScale: number = 1.5): HexbinHoverHandler<any> {
 

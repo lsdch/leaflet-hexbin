@@ -7,11 +7,6 @@ import { useDebounceFn } from "@vueuse/core"
 const { propsToLeafletOptions } = Utilities
 const { featureGroupProps, setupFeatureGroup } = Functions.FeatureGroup
 
-type HoverHandlers = {
-  fill?: boolean,
-  scale?: number
-}
-
 
 /**
  * Build fails when using ExtractPublicPropTypes so we resort to redefining prop types
@@ -29,10 +24,8 @@ export type LHexbinLayerProps<Data> = {
   radiusScaleExtent?: [number, number],
   opacityScaleExtent?: [number, number],
   colorRange?: string[]
-  hover?: {
-    fill?: boolean
-    scale?: number
-  }
+  hoverFill?: boolean
+  hoverScale?: number
 }
 
 
@@ -41,8 +34,19 @@ export function hexbinLayerProps<Data>() {
   return {
     ...featureGroupProps,
 
-    hover: {
-      type: Object as PropType<HoverHandlers>,
+    /**
+     * Whether to grow the hexagons to fill grid area when hovering.
+     */
+    hoverFill: {
+      type: Boolean,
+      default: false
+    },
+
+    /**
+     * Scale factor for the hexagons when hovering.
+     */
+    hoverScale: {
+      type: Number,
     },
 
     /**
