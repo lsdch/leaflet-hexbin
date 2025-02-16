@@ -1,5 +1,11 @@
 # vue-leaflet-hexbin
 
+## 0.1.6
+
+### Patch Changes
+
+- [`f419110`](https://github.com/lsdch/leaflet-hexbin/commit/f419110709b9d509afac392e6ff74216da55960e) Thanks [@lsdch](https://github.com/lsdch)! - dissociate hover props of vue component
+
 ## 0.1.5
 
 ### Patch Changes
