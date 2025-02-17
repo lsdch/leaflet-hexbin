@@ -1,5 +1,14 @@
 # vue-leaflet-hexbin
 
+## 0.1.7
+
+### Patch Changes
+
+- [`303be0e`](https://github.com/lsdch/leaflet-hexbin/commit/303be0ed7da9ec67d5038f6cd194f89539ef0c81) Thanks [@lsdch](https://github.com/lsdch)! - Add events binding for popupopen and popupclose
+
+- Updated dependencies [[`303be0e`](https://github.com/lsdch/leaflet-hexbin/commit/303be0ed7da9ec67d5038f6cd194f89539ef0c81)]:
+  - leaflet-hexbin@0.1.5
+
 ## 0.1.6
 
 ### Patch Changes
