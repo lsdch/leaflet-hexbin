@@ -335,7 +335,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     const size = thisLayer._map.getSize();
     const bounds = thisLayer._map.getBounds().pad(thisLayer.options.radius * 2 / Math.max(size.x, size.y));
 
-    const bins = thisLayer._hexLayout(data).filter(
+    const bins = thisLayer._hexLayout.radius(this.options.radius)(data).filter(
       ({ x, y }) => bounds.contains(thisLayer._map.layerPointToLatLng(L.point(x, y)))
     );
 
