@@ -42,6 +42,8 @@ type HexbinEvents = {
 }
 type Events = {
   ready: [payload: HexbinLayer]
+  popupopen: [items: HexbinData<Data>[], latLng: L.LatLng, hexbinLayer: HexbinLayer]
+  popupclose: [items: HexbinData<Data>[], latLng: L.LatLng, hexbinLayer: HexbinLayer]
 } & HexbinEvents
 
 const props = defineProps(hexbinLayerProps<Data>())
@@ -114,7 +116,14 @@ onMounted(async () => {
       (data: HexbinData<Data>[], latLng: L.LatLng, layer: HexbinLayer, ev: MouseEvent) => {
         emit('click', data, latLng, layer, ev)
         selected.value = { data, layer, event: ev, latLng }
-        if (leafletObject.value?.getPopup()) leafletObject.value!.openPopup(latLng)
+        if (leafletObject.value?.getPopup()) {
+          leafletObject.value!.openPopup(latLng)
+          emit('popupopen', data, latLng, layer)
+          leafletObject.value.getPopup()?.on('remove', () => {
+            emit('popupclose', data, latLng, layer)
+            selected.value = {}
+          })
+        }
       },
     )
 
