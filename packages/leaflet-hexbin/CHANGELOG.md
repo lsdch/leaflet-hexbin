@@ -1,5 +1,11 @@
 # leaflet-hexbin
 
+## 0.1.5
+
+### Patch Changes
+
+- [`303be0e`](https://github.com/lsdch/leaflet-hexbin/commit/303be0ed7da9ec67d5038f6cd194f89539ef0c81) Thanks [@lsdch](https://github.com/lsdch)! - Fix hex layout to always use up-to-date radius value
+
 ## 0.1.4
 
 ### Patch Changes
