@@ -4,7 +4,7 @@
 
 > **none**(): [`HexbinHoverHandler`](../../../interfaces/HexbinHoverHandler.md)\<`any`\>
 
-Defined in: [HexbinHoverHandler.ts:87](https://github.com/lsdch/leaflet-hexbin/blob/3526f2b23f3f047b976e45fce177acc7d484f2d0/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L87)
+Defined in: [HexbinHoverHandler.ts:87](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L87)
 
 No hover handler.
 
