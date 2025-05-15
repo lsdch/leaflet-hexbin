@@ -232,12 +232,10 @@
 </template>
 
 <script setup lang="ts">
+import dataPoints from '@/content/public/data/points_10k'
 import { LMap, LPopup, LTileLayer, LTooltip } from '@vue-leaflet/vue-leaflet'
 import { ref } from 'vue'
-import LHexbinLayer, { type ScaleBinding } from 'vue-leaflet-hexbin'
-import dataPoints from '@/content/public/data/points_10k'
-import type { HexbinData } from 'leaflet-hexbin'
-import { extent } from 'd3'
+import LHexbinLayer, { type ScaleBinding, type HexbinData } from 'vue-leaflet-hexbin'
 
 type Data = { index: number; coords: [number, number, number] }
 const data = ref(
