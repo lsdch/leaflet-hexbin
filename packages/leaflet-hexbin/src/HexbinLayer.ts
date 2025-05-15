@@ -25,10 +25,13 @@ export type TooltipOptions<Data> = {
   content?: L.Content | ((d: HexbinData<Data>[]) => L.Content)
 }
 
+
+export type ScaleBinding<Data> = (d: HexbinData<Data>[]) => number
+
 /**
  * Hexbin layer configuration options this can be provided when instantiating a new hexbin layer.
  */
-export interface HexbinLayerConfig {
+export interface HexbinLayerConfig<Data> {
   /**
    * Hex grid cell radius in pixels.
    * This value should be a positive number.
@@ -104,6 +107,11 @@ export interface HexbinLayerConfig {
    * @default false
    */
   noRedraw?: boolean
+
+  colorBinding?: ScaleBinding<Data>,
+  radiusBinding?: ScaleBinding<Data>,
+  opacityBinding?: ScaleBinding<Data>,
+  fill?: (d: HexbinData<Data>[]) => string
 }
 
 /**
@@ -139,7 +147,6 @@ const debounce = <T extends unknown[]>(
   };
 };
 
-
 /**
  * A layer for displaying binned data in a hexagon grid on a Leaflet map.
  * Extends L.SVG to take advantage of built-in zoom animations.
@@ -148,7 +155,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   /**
    * Default options for the hexbin layer
    */
-  options: Required<HexbinLayerConfig> & L.RendererOptions = {
+  options: Required<HexbinLayerConfig<Data>> & L.RendererOptions = {
     radius: 12,
     opacity: 0.6,
     duration: 200,
@@ -163,24 +170,19 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
     pointerEvents: 'all',
     noRedraw: false,
+    colorBinding: (d: HexbinData<Data>[]) => d.length,
+    radiusBinding: (d: HexbinData<Data>[]) => d.length,
+    opacityBinding: (d: HexbinData<Data>[]) => d.length,
+    fill: (d: HexbinData<Data>[]) => {
+      const val = this.options.colorBinding(d);
+      return (null != val) ? this._scale.color(val) : 'none';
+    },
     // Handle parent default options
     // ...L.SVG.prototype.options,
     ...L.Renderer.prototype.options,
     ...L.Layer.prototype.options
   }
 
-  /**
-   * Internal functions to access the data
-   */
-  protected _fn = {
-    colorValue: (d: HexbinData<Data>[]) => d.length,
-    radiusValue: (d: HexbinData<Data>[]) => d.length,
-    opacityValue: (d: HexbinData<Data>[]) => d.length,
-    fill: (d: HexbinData<Data>[]) => {
-      const val = this._fn.colorValue(d);
-      return (null != val) ? this._scale.color(val) : 'none';
-    }
-  }
   /**
    * D3 scales used for the hexbin layer
    */
@@ -216,7 +218,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   // declare _container: HTMLElement;
   declare protected _d3Container: d3.Selection<SVGGElement, unknown, null, undefined>;
 
-  public constructor(options?: HexbinLayerConfig) {
+  public constructor(options?: HexbinLayerConfig<Data>) {
     super()
     // L.SVG.prototype.initialize.call(this, options);
     this.options = { ...this.options, ...options };
@@ -340,9 +342,9 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
     );
 
     // Derive the extents of the data values for each dimension
-    const colorExtent = thisLayer._getExtent(bins, thisLayer._fn.colorValue, thisLayer.options.colorScaleExtent);
-    const radiusExtent = thisLayer._getExtent(bins, thisLayer._fn.radiusValue, thisLayer.options.radiusScaleExtent);
-    const opacityExtent = thisLayer._getExtent(bins, thisLayer._fn.opacityValue, thisLayer.options.opacityScaleExtent);
+    const colorExtent = thisLayer._getExtent(bins, thisLayer.options.colorBinding, thisLayer.options.colorScaleExtent);
+    const radiusExtent = thisLayer._getExtent(bins, thisLayer.options.radiusBinding, thisLayer.options.radiusScaleExtent);
+    const opacityExtent = thisLayer._getExtent(bins, thisLayer.options.opacityBinding, thisLayer.options.opacityScaleExtent);
 
     // Match the domain cardinality to that of the color range, to allow for a polylinear scale
     const colorDomain = this.options.colorDomain
@@ -376,11 +378,11 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
      */
     join.select<SVGPathElement>('path.hexbin-hexagon')
       .transition().duration(thisLayer.options.duration)
-      .attr('fill', thisLayer._fn.fill.bind(thisLayer))
-      .attr('fill-opacity', (d) => thisLayer._scale.opacity(thisLayer._fn.opacityValue.call(thisLayer, d)))
-      .attr('stroke-opacity', (d) => thisLayer._scale.opacity(thisLayer._fn.opacityValue.call(thisLayer, d)))
+      .attr('fill', thisLayer.options.fill.bind(thisLayer))
+      .attr('fill-opacity', (d) => thisLayer._scale.opacity(thisLayer.options.opacityBinding.call(thisLayer, d)))
+      .attr('stroke-opacity', (d) => thisLayer._scale.opacity(thisLayer.options.opacityBinding.call(thisLayer, d)))
       .attr('d', (d) => {
-        return thisLayer._hexLayout.hexagon(thisLayer._scale.radius(thisLayer._fn.radiusValue.call(thisLayer, d)));
+        return thisLayer._hexLayout.hexagon(thisLayer._scale.radius(thisLayer.options.radiusBinding.call(thisLayer, d)));
       });
 
 
@@ -402,15 +404,15 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
       .attr('transform', ({ x, y }) => `translate(${x},${y})`)
       .attr('d', () => thisLayer._hexLayout.hexagon(thisLayer._scale.radius.range()[0]))
       // .attr('d', (data, length) => thisLayer._hexLayout.hexagon(thisLayer._scale.radius(data.length)))
-      .attr('fill', thisLayer._fn.fill.bind(thisLayer))
+      .attr('fill', thisLayer.options.fill.bind(thisLayer))
       .attr('fill-opacity', 0.01)
       .attr('stroke-opacity', 0.01)
       .style('pointer-events', 'all');
 
     hexagons.transition().duration(thisLayer.options.duration)
-      .attr('fill-opacity', (d) => thisLayer._scale.opacity(thisLayer._fn.opacityValue.call(thisLayer, d)))
-      .attr('stroke-opacity', (d) => thisLayer._scale.opacity(thisLayer._fn.opacityValue.call(thisLayer, d)))
-      .attr('d', (d) => thisLayer._hexLayout.hexagon(thisLayer._scale.radius(thisLayer._fn.radiusValue.call(thisLayer, d))))
+      .attr('fill-opacity', (d) => thisLayer._scale.opacity(thisLayer.options.opacityBinding.call(thisLayer, d)))
+      .attr('stroke-opacity', (d) => thisLayer._scale.opacity(thisLayer.options.opacityBinding.call(thisLayer, d)))
+      .attr('d', (d) => thisLayer._hexLayout.hexagon(thisLayer._scale.radius(thisLayer.options.radiusBinding.call(thisLayer, d))))
       .style('pointer-events', 'all');
 
     // Grid
@@ -629,11 +631,11 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
    * @param v The value mapper to set. This function should accept an array of hexbin data and return a number to be used for color interpolation.
    * @default the length of the data in the hexbin
    */
-  colorValue(): (d: HexbinData<Data>[]) => number;
-  colorValue(v: (d: HexbinData<Data>[]) => number): this;
-  colorValue(v?: (d: HexbinData<Data>[]) => number) {
-    if (v === undefined) { return this._fn.colorValue; }
-    this._fn.colorValue = v;
+  colorValue(): ScaleBinding<Data>;
+  colorValue(v: ScaleBinding<Data>): this;
+  colorValue(v?: ScaleBinding<Data>) {
+    if (v === undefined) { return this.options.colorBinding; }
+    this.options.colorBinding = v;
 
     return this;
   }
@@ -643,11 +645,11 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
    * @param v The value mapper to set. This function should return a number for each bin, which will be used to determine the radius of the hexagon.
    * @default the length of the data in the hexbin
    */
-  radiusValue(): (d: HexbinData<Data>[]) => number;
-  radiusValue(v: (d: HexbinData<Data>[]) => number): this;
-  radiusValue(v?: (d: HexbinData<Data>[]) => number) {
-    if (v === undefined) { return this._fn.radiusValue; }
-    this._fn.radiusValue = v;
+  radiusValue(): ScaleBinding<Data>;
+  radiusValue(v: ScaleBinding<Data>): this;
+  radiusValue(v?: ScaleBinding<Data>) {
+    if (v === undefined) { return this.options.radiusBinding; }
+    this.options.radiusBinding = v;
 
     return this;
   }
@@ -660,8 +662,8 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   fill(): (d: HexbinData<Data>[]) => string;
   fill(v: (d: HexbinData<Data>[]) => string): this;
   fill(v?: (d: HexbinData<Data>[]) => string) {
-    if (v === undefined) { return this._fn.fill; }
-    this._fn.fill = v;
+    if (v === undefined) { return this.options.fill; }
+    this.options.fill = v;
 
     return this;
   }
@@ -713,6 +715,59 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
     if (!this.options.noRedraw) this.redraw();
 
+    return this;
+  }
+
+  /**
+   * Get or set the color scale binding function for the hexbin layer.
+   * This function is used to determine the color of each hexbin based on the data.
+   */
+  colorBinding(): ScaleBinding<Data>;
+  colorBinding(v: ScaleBinding<Data>): this;
+  colorBinding(v?: ScaleBinding<Data>): this | (ScaleBinding<Data>) {
+    if (v === undefined) { return this.options.colorBinding; }
+    this.options.colorBinding = v;
+    if (!this.options.noRedraw) this.redraw();
+    return this;
+  }
+
+  /**
+   * Get or set the radius scale binding function for the hexbin layer.
+   * This function is used to determine the radius of each hexbin based on the data.
+   */
+  radiusBinding(): ScaleBinding<Data>;
+  radiusBinding(v: ScaleBinding<Data>): this;
+  radiusBinding(v?: ScaleBinding<Data>): this | (ScaleBinding<Data>) {
+    if (v === undefined) { return this.options.radiusBinding; }
+    this.options.radiusBinding = v;
+    if (!this.options.noRedraw) this.redraw();
+    return this;
+  }
+
+  /**
+   * Get or set the opacity scale binding function for the hexbin layer.
+   * This function is used to determine the opacity of each hexbin based on the data.
+   */
+  opacityBinding(): ScaleBinding<Data>;
+  opacityBinding(v: ScaleBinding<Data>): this;
+  opacityBinding(v?: ScaleBinding<Data>): this | (ScaleBinding<Data>) {
+    if (v === undefined) { return this.options.opacityBinding; }
+    this.options.opacityBinding = v;
+    if (!this.options.noRedraw) this.redraw();
+    return this;
+  }
+
+  /**
+   * Get or set the fill binding function for the hexbin layer.
+   * This function is used to determine the fill color of each hexbin based on the data.
+   * Can be used to override the default color scale function.
+   */
+  fillColor(): (d: HexbinData<Data>[]) => string;
+  fillColor(v: (d: HexbinData<Data>[]) => string): this;
+  fillColor(v?: (d: HexbinData<Data>[]) => string): this | ((d: HexbinData<Data>[]) => string) {
+    if (v === undefined) { return this.options.fill; }
+    this.options.fill = v;
+    if (!this.options.noRedraw) this.redraw();
     return this;
   }
 
@@ -787,7 +842,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 /**
  * Factory function to instanciate a new hexbin layer
  */
-export function hexbinLayer<Data = L.LatLngExpression>(options?: HexbinLayerConfig) {
+export function hexbinLayer<Data = L.LatLngExpression>(options?: HexbinLayerConfig<Data>) {
   return new HexbinLayer<Data>(options);
 }
 

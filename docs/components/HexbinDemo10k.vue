@@ -13,15 +13,26 @@
         :radius-range="useRadiusRange ? radiusRange : null"
         :opacity="opacity.asRange ? opacity.range : opacity.value"
         :duration
-        :color-range="['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']"
-        @ready="(v) => console.log('ready')"
+        :color-range="
+          colorPalette == 'Viridis'
+            ? ['#440154', '#3b528b', '#21918c', '#5ec962', '#fde725']
+            : undefined
+        "
         :hover-fill="hover.fill"
         :hover-scale="hover.scale.active ? hover.scale.factor : undefined"
+        :colorBinding="useScaleBinding(scaleBindings.color)"
+        :radiusBinding="useScaleBinding(scaleBindings.radius)"
+        :opacityBinding="useScaleBinding(scaleBindings.opacity)"
+        @ready="(v) => console.log('ready')"
       >
         <template #popup="{ data, layer, event, latLng }">
           <LPopup>
             <v-card flat theme="light">
               <p>Count: {{ data?.length }}</p>
+              <p>
+                Total weight :
+                {{ data?.reduce((acc, { data }) => acc + (data.coords[2] ?? 0), 0).toFixed(0) }}
+              </p>
               <p>
                 Coords:
                 <v-chip class="mx-1" size="small">{{ latLng?.lat.toFixed(4) }}</v-chip>
@@ -39,30 +50,87 @@
     </l-map>
   </v-card>
   <div class="mt-3">
-    <v-card title="Radius">
-      <template #append>
-        <v-switch v-model="useRadiusRange" color="primary" label="Use range scale" hide-details />
-      </template>
-      <v-card-text>
-        <v-slider
-          label="Radius"
-          hint="Controls bin radius"
-          persistent-hint
-          v-model="radius"
-          :min="5"
-          :max="50"
-        />
-        <v-range-slider
-          label="Radius range"
-          hint="Scale hex radius with bin length"
-          persistent-hint
-          v-model="radiusRange"
-          :min="1"
-          :max="50"
-          :disabled="!useRadiusRange"
-        />
-      </v-card-text>
-    </v-card>
+    <v-row>
+      <v-col>
+        <v-card title="Color scale">
+          <v-card-text>
+            <v-select
+              v-model="colorPalette"
+              label="Palette"
+              variant="outlined"
+              :items="['Default', 'Viridis']"
+            ></v-select>
+            <v-select
+              label="Binding"
+              :items="['Count', 'Weight']"
+              item-title="name"
+              item-value="value"
+              variant="outlined"
+              v-model="scaleBindings.color.value"
+            >
+              <template #append>
+                <v-switch
+                  v-model="scaleBindings.color.log"
+                  color="primary"
+                  label="Log scale"
+                  hide-details
+                />
+              </template>
+            </v-select>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-card title="Radius">
+          <template #append>
+            <v-switch
+              v-model="useRadiusRange"
+              color="primary"
+              label="Use range scale"
+              hide-details
+            />
+          </template>
+          <v-card-text>
+            <v-slider
+              label="Radius"
+              hint="Controls bin radius"
+              persistent-hint
+              v-model="radius"
+              :min="5"
+              :max="50"
+            />
+            <v-select
+              v-if="useRadiusRange"
+              label="Radius scale binding"
+              :items="['Count', 'Weight']"
+              variant="outlined"
+              v-model="scaleBindings.radius.value"
+            >
+              <template #append>
+                <v-switch
+                  v-model="scaleBindings.radius.log"
+                  color="primary"
+                  label="Log scale"
+                  hide-details
+                />
+              </template>
+            </v-select>
+            <v-range-slider
+              label="Radius range"
+              hint="Scale hex radius with bin length"
+              persistent-hint
+              v-model="radiusRange"
+              :min="1"
+              :max="50"
+              :disabled="!useRadiusRange"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
     <v-row class="my-0">
       <v-col cols="12" md="6">
         <v-card title="Opacity" class="mt-0">
@@ -75,10 +143,28 @@
             />
           </template>
           <v-card-text>
+            <v-select
+              v-if="opacity.asRange"
+              label="Scale binding"
+              :items="['Count', 'Weight']"
+              variant="outlined"
+              item-title="name"
+              item-value="value"
+              v-model="scaleBindings.opacity.value"
+            >
+              <template #append>
+                <v-switch
+                  v-model="scaleBindings.opacity.log"
+                  color="primary"
+                  label="Log"
+                  hide-details
+                />
+              </template>
+            </v-select>
             <v-range-slider
               v-if="opacity.asRange"
               v-model="opacity.range"
-              label="Opacity"
+              label="Range"
               :min="0"
               :max="1"
               :step="0.05"
@@ -147,8 +233,9 @@
 <script setup lang="ts">
 import { LMap, LPopup, LTileLayer, LTooltip } from '@vue-leaflet/vue-leaflet'
 import { ref } from 'vue'
-import LHexbinLayer from 'vue-leaflet-hexbin'
+import LHexbinLayer, { type ScaleBinding } from 'vue-leaflet-hexbin'
 import dataPoints from '@/content/public/data/points_10k'
+import type { HexbinData } from 'leaflet-hexbin'
 
 type Data = { index: number; coords: [number, number, number] }
 const data = ref(
@@ -173,6 +260,35 @@ const hover = ref({
     active: false,
     factor: 1.5,
   },
+})
+
+const colorPalette = ref('Viridis')
+
+const scaleBindingFuncs = {
+  Count: (d: HexbinData<Data>[]) => d.length,
+  Weight: (d: HexbinData<Data>[]) => d.reduce((acc, { data }) => acc + (data.coords[2] ?? 0), 0),
+}
+
+function asLog(f: ScaleBinding<Data>) {
+  return (d: HexbinData<Data>[]) => {
+    const value = f(d)
+    return value > 0 ? Math.log(value) : 0
+  }
+}
+
+type ScaleBindingSpec = {
+  value: 'Count' | 'Weight'
+  log: boolean
+}
+
+function useScaleBinding(spec: ScaleBindingSpec) {
+  return spec.log ? asLog(scaleBindingFuncs[spec.value]) : scaleBindingFuncs[spec.value]
+}
+
+const scaleBindings = ref<Record<'color' | 'radius' | 'opacity', ScaleBindingSpec>>({
+  color: { value: 'Count', log: false },
+  radius: { value: 'Count', log: false },
+  opacity: { value: 'Count', log: false },
 })
 </script>
 

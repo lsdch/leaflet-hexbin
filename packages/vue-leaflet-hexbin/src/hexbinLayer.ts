@@ -4,6 +4,7 @@ import type { PropType, Ref, SetupContext } from 'vue'
 import { Functions, Utilities } from '@vue-leaflet/vue-leaflet'
 import type { LatLngExpression, LeafletEventHandlerFnMap } from 'leaflet'
 import { useDebounceFn } from "@vueuse/core"
+import type { HexbinData } from "leaflet-hexbin"
 const { propsToLeafletOptions } = Utilities
 const { featureGroupProps, setupFeatureGroup } = Functions.FeatureGroup
 
@@ -26,6 +27,10 @@ export type LHexbinLayerProps<Data> = {
   colorRange?: string[]
   hoverFill?: boolean
   hoverScale?: number
+  colorBinding?: (d: HexbinData<Data>[]) => number,
+  radiusBinding?: (d: HexbinData<Data>[]) => number,
+  opacityBinding?: (d: HexbinData<Data>[]) => number,
+  fillColor?: (d: HexbinData<Data>[]) => string
 }
 
 
@@ -117,7 +122,7 @@ export function hexbinLayerProps<Data>() {
       default: [1, undefined]
     },
     /**
-     * Sets the range of the color scale used to fill the hexbins.
+     * Range of the color scale used to fill the hexbins.
      * Colors scale interpolates between all provided colors.
      */
     colorRange: {
@@ -125,11 +130,37 @@ export function hexbinLayerProps<Data>() {
       default: ['#f7fbff', '#08306b']
     },
     /**
-     * Sets the range of the radius scale used to size the hexbins.
+     * Range of the radius scale used to size the hexbins.
      */
     radiusRange: {
       type: Array as unknown as PropType<[number, number] | null>,
-    }
+    },
+    /**
+     * Value to bind to the fill color of the hexbins.
+     */
+    colorBinding: {
+      type: Function as PropType<(d: HexbinData<Data>[]) => number>,
+    },
+    /**
+     * Value to bind to the radius of the hexbins.
+     */
+    radiusBinding: {
+      type: Function as PropType<(d: HexbinData<Data>[]) => number>,
+    },
+    /**
+     * Value to bind to the opacity of the hexbins.
+     */
+    opacityBinding: {
+      type: Function as PropType<(d: HexbinData<Data>[]) => number>,
+    },
+    /**
+     * Determine the fill color of the hexbins.
+     * This function is called for each hexbin and should return a color.
+     * The default is to use the color scale.
+     */
+    fillColor: {
+      type: Function as PropType<(d: HexbinData<Data>[]) => number>,
+    },
   } as const
 }
 
@@ -163,7 +194,7 @@ export const setupHexbinLayer = <Data = LatLngExpression, Events = unknown>(
     context
   )
 
-  const options = propsToLeafletOptions<HexbinLayerConfig>(
+  const options = propsToLeafletOptions<HexbinLayerConfig<Data>>(
     props,
     hexbinLayerProps(),
     featureOptions
@@ -215,6 +246,22 @@ export const setupHexbinLayer = <Data = LatLngExpression, Events = unknown>(
     },
     setAccessor(accessor: (d: Data) => LatLngExpression) {
       leafletRef.value?.data(leafletRef.value.data(), accessor)
+      debouncedRedraw()
+    },
+    setColorBinding(binding: (d: HexbinData<Data>[]) => number) {
+      leafletRef.value?.colorBinding(binding)
+      debouncedRedraw()
+    },
+    setRadiusBinding(binding: (d: HexbinData<Data>[]) => number) {
+      leafletRef.value?.radiusBinding(binding)
+      debouncedRedraw()
+    },
+    setOpacityBinding(binding: (d: HexbinData<Data>[]) => number) {
+      leafletRef.value?.opacityBinding(binding)
+      debouncedRedraw()
+    },
+    setFillColor(binding: (d: HexbinData<Data>[]) => string) {
+      leafletRef.value?.fillColor(binding)
       debouncedRedraw()
     }
   }

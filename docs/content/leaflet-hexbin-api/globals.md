@@ -16,6 +16,7 @@
 ## Type Aliases
 
 - [HexbinData](type-aliases/HexbinData.md)
+- [ScaleBinding](type-aliases/ScaleBinding.md)
 - [TooltipOptions](type-aliases/TooltipOptions.md)
 
 ## Functions

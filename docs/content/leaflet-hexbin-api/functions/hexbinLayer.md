@@ -4,7 +4,7 @@
 
 > **hexbinLayer**\<`Data`\>(`options`?): [`HexbinLayer`](../classes/HexbinLayer.md)\<`Data`\>
 
-Defined in: [HexbinLayer.ts:790](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L790)
+Defined in: [HexbinLayer.ts:846](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L846)
 
 Factory function to instanciate a new hexbin layer
 
@@ -16,7 +16,7 @@ Factory function to instanciate a new hexbin layer
 
 ### options?
 
-[`HexbinLayerConfig`](../interfaces/HexbinLayerConfig.md)
+[`HexbinLayerConfig`](../interfaces/HexbinLayerConfig.md)\<`Data`\>
 
 ## Returns
 

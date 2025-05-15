@@ -67,6 +67,10 @@
         "link": "/leaflet-hexbin-api/type-aliases/HexbinData.md"
       },
       {
+        "text": "ScaleBinding",
+        "link": "/leaflet-hexbin-api/type-aliases/ScaleBinding.md"
+      },
+      {
         "text": "TooltipOptions",
         "link": "/leaflet-hexbin-api/type-aliases/TooltipOptions.md"
       }

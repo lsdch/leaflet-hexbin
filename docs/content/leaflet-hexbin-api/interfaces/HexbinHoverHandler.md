@@ -2,7 +2,7 @@
 
 # Interface: HexbinHoverHandler\<Data\>
 
-Defined in: [HexbinHoverHandler.ts:8](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L8)
+Defined in: [HexbinHoverHandler.ts:8](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L8)
 
 Interface for handling hover events on hexbins.
 
@@ -16,7 +16,7 @@ Interface for handling hover events on hexbins.
 
 > **mouseover**(`svg`, `hexLayer`, `event`, `data`): `void`
 
-Defined in: [HexbinHoverHandler.ts:9](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L9)
+Defined in: [HexbinHoverHandler.ts:9](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L9)
 
 #### Parameters
 
@@ -46,7 +46,7 @@ Defined in: [HexbinHoverHandler.ts:9](https://github.com/lsdch/leaflet-hexbin/bl
 
 > **mouseout**(`svg`, `hexLayer`, `event`, `data`): `void`
 
-Defined in: [HexbinHoverHandler.ts:10](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L10)
+Defined in: [HexbinHoverHandler.ts:10](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinHoverHandler.ts#L10)
 
 #### Parameters
 

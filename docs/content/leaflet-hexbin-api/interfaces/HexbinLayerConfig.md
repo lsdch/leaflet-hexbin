@@ -1,10 +1,14 @@
 [leaflet-hexbin](../globals.md) / HexbinLayerConfig
 
-# Interface: HexbinLayerConfig
+# Interface: HexbinLayerConfig\<Data\>
 
-Defined in: [HexbinLayer.ts:31](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L31)
+Defined in: [HexbinLayer.ts:34](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L34)
 
 Hexbin layer configuration options this can be provided when instantiating a new hexbin layer.
+
+## Type Parameters
+
+• **Data**
 
 ## Properties
 
@@ -12,7 +16,7 @@ Hexbin layer configuration options this can be provided when instantiating a new
 
 > `optional` **radius**: `number`
 
-Defined in: [HexbinLayer.ts:39](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L39)
+Defined in: [HexbinLayer.ts:42](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L42)
 
 Hex grid cell radius in pixels.
 This value should be a positive number.
@@ -31,7 +35,7 @@ but not necessarily to draw each individual hexbin.
 
 > `optional` **opacity**: `number` \| \[`number`, `number`\]
 
-Defined in: [HexbinLayer.ts:46](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L46)
+Defined in: [HexbinLayer.ts:49](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L49)
 
 Sets the opacity on the hexbin layer.
 This value should be a number between 0 and 1.
@@ -49,7 +53,7 @@ If an array is provided, the first element is the minimum opacity and the second
 
 > `optional` **opacityScaleExtent**: \[`number`, `undefined` \| `number`\]
 
-Defined in: [HexbinLayer.ts:51](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L51)
+Defined in: [HexbinLayer.ts:54](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L54)
 
 Opacity scale extent: [min, max] domain for opacity interpolation.
 
@@ -65,7 +69,7 @@ Opacity scale extent: [min, max] domain for opacity interpolation.
 
 > `optional` **duration**: `number`
 
-Defined in: [HexbinLayer.ts:56](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L56)
+Defined in: [HexbinLayer.ts:59](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L59)
 
 Duration of transition in milliseconds.
 
@@ -81,7 +85,7 @@ Duration of transition in milliseconds.
 
 > `optional` **colorScaleExtent**: \[`number`, `undefined` \| `number`\]
 
-Defined in: [HexbinLayer.ts:62](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L62)
+Defined in: [HexbinLayer.ts:65](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L65)
 
 Color scale extent: [min, max] domain for color interpolation.
 
@@ -97,7 +101,7 @@ Color scale extent: [min, max] domain for color interpolation.
 
 > `optional` **colorDomain**: `null` \| `number`[]
 
-Defined in: [HexbinLayer.ts:70](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L70)
+Defined in: [HexbinLayer.ts:73](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L73)
 
 This is used to override the default behavior, which is to derive the color domain from the data.
 Normally, you can tweak the generation of the color domain using the colorScaleExtent option.
@@ -116,7 +120,7 @@ null
 
 > `optional` **colorRange**: `string`[]
 
-Defined in: [HexbinLayer.ts:75](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L75)
+Defined in: [HexbinLayer.ts:78](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L78)
 
 Color range used to fill the hexbins.
 
@@ -132,7 +136,7 @@ Color range used to fill the hexbins.
 
 > `optional` **radiusScaleExtent**: \[`number`, `undefined` \| `number`\]
 
-Defined in: [HexbinLayer.ts:81](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L81)
+Defined in: [HexbinLayer.ts:84](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L84)
 
 Radius scale extent: [min, max] domain for radius interpolation.
 
@@ -148,7 +152,7 @@ Radius scale extent: [min, max] domain for radius interpolation.
 
 > `optional` **radiusDomain**: `null` \| `number`[]
 
-Defined in: [HexbinLayer.ts:89](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L89)
+Defined in: [HexbinLayer.ts:92](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L92)
 
 This is used to override the default behavior, which is to derive the radius domain from the data.
 Normally, you can tweak the generation of the radius domain using the radiusScaleExtent option.
@@ -167,7 +171,7 @@ null
 
 > `optional` **radiusRange**: `null` \| \[`number`, `number`\]
 
-Defined in: [HexbinLayer.ts:94](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L94)
+Defined in: [HexbinLayer.ts:97](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L97)
 
 Sets the range of the radius scale used to size the hexbins.
 
@@ -183,7 +187,7 @@ hex grid cell radius
 
 > `optional` **pointerEvents**: `string`
 
-Defined in: [HexbinLayer.ts:100](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L100)
+Defined in: [HexbinLayer.ts:103](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L103)
 
 You should only modify this config option if you want to change the mouse event behavior on hexbins. This will modify when the events are propagated based on the visibility state and/or part of the hexbin being hovered.
 
@@ -199,7 +203,7 @@ You should only modify this config option if you want to change the mouse event 
 
 > `optional` **noRedraw**: `boolean`
 
-Defined in: [HexbinLayer.ts:106](https://github.com/lsdch/leaflet-hexbin/blob/d51d1f79bbf68a02c863ce063b78996b0fea3940/packages/leaflet-hexbin/src/HexbinLayer.ts#L106)
+Defined in: [HexbinLayer.ts:109](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L109)
 
 If true, the layer will not be redrawn after data changes and hover handler binding.
 
@@ -208,3 +212,45 @@ If true, the layer will not be redrawn after data changes and hover handler bind
 ```ts
 false
 ```
+
+***
+
+### colorBinding?
+
+> `optional` **colorBinding**: [`ScaleBinding`](../type-aliases/ScaleBinding.md)\<`Data`\>
+
+Defined in: [HexbinLayer.ts:111](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L111)
+
+***
+
+### radiusBinding?
+
+> `optional` **radiusBinding**: [`ScaleBinding`](../type-aliases/ScaleBinding.md)\<`Data`\>
+
+Defined in: [HexbinLayer.ts:112](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L112)
+
+***
+
+### opacityBinding?
+
+> `optional` **opacityBinding**: [`ScaleBinding`](../type-aliases/ScaleBinding.md)\<`Data`\>
+
+Defined in: [HexbinLayer.ts:113](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L113)
+
+***
+
+### fillBinding()?
+
+> `optional` **fillBinding**: (`d`) => `string`
+
+Defined in: [HexbinLayer.ts:114](https://github.com/lsdch/leaflet-hexbin/blob/a4d5cbb4acb651638e935d445e18747290017eba/packages/leaflet-hexbin/src/HexbinLayer.ts#L114)
+
+#### Parameters
+
+##### d
+
+[`HexbinData`](../type-aliases/HexbinData.md)\<`Data`\>[]
+
+#### Returns
+
+`string`

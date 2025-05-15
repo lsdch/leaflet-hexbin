@@ -15,6 +15,6 @@ watch(isDark, (isDark) => {
 
 ---
 
-<div class="d-flex flex-column" style="height: 100vh">
+<div class="d-flex flex-column">
 <HexbinDemo10k />
 </div>
