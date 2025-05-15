@@ -6,12 +6,5 @@
   ],
   "exclude": [
     "src/**/__tests__/*"
-  ],
-  "compilerOptions": {
-    "paths": {
-      "leaflet-hexbin": [
-        "../leaflet-hexbin/src/index.ts"
-      ]
-    }
-  }
+  ]
 }
