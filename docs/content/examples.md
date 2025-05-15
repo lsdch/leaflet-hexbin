@@ -1,9 +1,9 @@
 <script setup>
-import HexbinDemo10k from "@/components/HexbinDemo10k.vue"
 import { watch } from "vue"
-
-import { useData } from 'vitepress'
+import { useData, defineClientComponent } from 'vitepress'
 import { useTheme } from 'vuetify'
+const HexbinDemo10k = defineClientComponent(() => import("@/components/HexbinDemo10k.vue"))
+
 const { isDark } = useData()
 const vuetifyTheme = useTheme()
 watch(isDark, (isDark) => {
