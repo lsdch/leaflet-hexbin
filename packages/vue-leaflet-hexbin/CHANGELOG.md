@@ -1,5 +1,11 @@
 # vue-leaflet-hexbin
 
+## 0.2.2
+
+### Patch Changes
+
+- [`057f3eb`](https://github.com/lsdch/leaflet-hexbin/commit/057f3eb4ca2994a8b41803537ce63c3481e56628) Thanks [@lsdch](https://github.com/lsdch)! - fix re-export from leaflet-hexbin
+
 ## 0.2.1
 
 ### Patch Changes
