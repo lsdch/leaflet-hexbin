@@ -1,5 +1,13 @@
 # leaflet-hexbin
 
+## 0.2.0
+
+### Minor Changes
+
+- [`53eba01`](https://github.com/lsdch/leaflet-hexbin/commit/53eba0192854bbdc04c32dad6fd95fd01cf4181b) Thanks [@lsdch](https://github.com/lsdch)! - - Implement optional custom bindings for color, range and opacity scales
+  - Improve events callback bindings and expose draw event
+  - fix SSR issue in docs
+
 ## 0.1.5
 
 ### Patch Changes

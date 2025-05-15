@@ -1,5 +1,19 @@
 # leaflet-hexbin-docs
 
+## 0.2.0
+
+### Minor Changes
+
+- [`53eba01`](https://github.com/lsdch/leaflet-hexbin/commit/53eba0192854bbdc04c32dad6fd95fd01cf4181b) Thanks [@lsdch](https://github.com/lsdch)! - - Implement optional custom bindings for color, range and opacity scales
+  - Improve events callback bindings and expose draw event
+  - fix SSR issue in docs
+
+### Patch Changes
+
+- Updated dependencies [[`53eba01`](https://github.com/lsdch/leaflet-hexbin/commit/53eba0192854bbdc04c32dad6fd95fd01cf4181b)]:
+  - leaflet-hexbin@0.2.0
+  - vue-leaflet-hexbin@0.2.0
+
 ## 0.1.10
 
 ### Patch Changes
