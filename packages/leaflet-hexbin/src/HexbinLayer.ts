@@ -193,7 +193,7 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
   };
 
   // Set up the Dispatcher for managing events and callbacks
-  protected _dispatch = dispatch<SVGPathElement>('mouseover', 'mouseout', 'click');
+  protected _dispatch = dispatch('mouseover', 'mouseout', 'click', 'draw');
 
   // Set up the default hover handler
   protected _hoverHandler: HexbinHoverHandler<Data> = HexbinHoverHandler.none();
@@ -465,6 +465,10 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
 
     exit.transition().duration(thisLayer.options.duration).remove();
 
+
+    thisLayer._dispatch.call('draw', thisLayer, data, thisLayer, {
+      colorExtent
+    });
   }
 
   _getExtent(
@@ -836,6 +840,31 @@ export class HexbinLayer<Data = L.LatLngExpression> extends L.SVG {
       type: 'MultiPoint',
       coordinates: L.GeoJSON.latLngsToCoords(this.getLatLngs(), 0)
     });
+  }
+
+  onDraw(handler: (layer: HexbinLayer, data: HexbinData<Data>[], view: { colorExtent: [number, number] }) => void) {
+    this.dispatch().on('draw', handler);
+  }
+
+  /**
+   * Bind callback to hexagon mouseover event
+   */
+  onMouseOver(handler: (data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => void) {
+    this.dispatch().on('mouseover', handler);
+  }
+
+  /**
+   * Bind callback to hexagon mouseout event
+   */
+  onMouseOut(handler: (data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => void) {
+    this.dispatch().on('mouseout', handler);
+  }
+
+  /**
+   * Bind callback to hexagon click event
+   */
+  onClick(handler: (data: HexbinData<Data>[], latLng: L.LatLng, layer: HexbinLayer, ev: MouseEvent) => void) {
+    this.dispatch().on('click', handler);
   }
 }
 

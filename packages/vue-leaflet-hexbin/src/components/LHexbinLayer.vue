@@ -26,6 +26,7 @@ import {
 
 const { propsBinder, assertInject } = Utilities
 type HexbinEvents = {
+  'update:colorScaleExtent': [colorExtent: [number, number], hexbinLayer: HexbinLayer]
   mouseover: [
     data: HexbinData<Data>[],
     // latLng: L.LatLng,
@@ -93,39 +94,44 @@ onMounted(async () => {
     leafletObject.value.hoverHandler(HexbinHoverHandler.compound(handlers)).redraw()
   })
 
+  leafletObject.value.onDraw(
+    (
+      layer: HexbinLayer,
+      _data: HexbinData<Data>[],
+      { colorExtent }: { colorExtent: [number, number] },
+    ) => {
+      emit('update:colorScaleExtent', colorExtent, layer)
+    },
+  )
+
   // Bind events
-  leafletObject.value
-    .dispatch()
-    .on('mouseover', (data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => {
+  leafletObject.value.onMouseOver(
+    (data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => {
       hovered.value = { data, layer, event: ev }
       emit('mouseover', data, layer, ev)
-    })
+    },
+  )
 
-  leafletObject.value
-    .dispatch()
-    .on('mouseout', (data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => {
-      hovered.value = {}
-      emit('mouseout', data, layer, ev)
-    })
+  leafletObject.value.onMouseOut((data: HexbinData<Data>[], layer: HexbinLayer, ev: MouseEvent) => {
+    hovered.value = {}
+    emit('mouseout', data, layer, ev)
+  })
 
   // Bind popup
-  leafletObject.value
-    .dispatch()
-    .on(
-      'click',
-      (data: HexbinData<Data>[], latLng: L.LatLng, layer: HexbinLayer, ev: MouseEvent) => {
-        emit('click', data, latLng, layer, ev)
-        selected.value = { data, layer, event: ev, latLng }
-        if (leafletObject.value?.getPopup()) {
-          leafletObject.value!.openPopup(latLng)
-          emit('popupopen', data, latLng, layer)
-          leafletObject.value.getPopup()?.on('remove', () => {
-            emit('popupclose', data, latLng, layer)
-            selected.value = {}
-          })
-        }
-      },
-    )
+  leafletObject.value.onClick(
+    (data: HexbinData<Data>[], latLng: L.LatLng, layer: HexbinLayer, ev: MouseEvent) => {
+      emit('click', data, latLng, layer, ev)
+      selected.value = { data, layer, event: ev, latLng }
+      if (leafletObject.value?.getPopup()) {
+        leafletObject.value!.openPopup(latLng)
+        emit('popupopen', data, latLng, layer)
+        leafletObject.value.getPopup()?.on('remove', () => {
+          emit('popupclose', data, latLng, layer)
+          selected.value = {}
+        })
+      }
+    },
+  )
 
   addLayer({
     ...props,

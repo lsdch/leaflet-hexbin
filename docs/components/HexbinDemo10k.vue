@@ -24,6 +24,7 @@
         :radiusBinding="useScaleBinding(scaleBindings.radius)"
         :opacityBinding="useScaleBinding(scaleBindings.opacity)"
         @ready="(v) => console.log('ready')"
+        @update:colorScaleExtent="(extent) => console.log('color scale extent', extent)"
       >
         <template #popup="{ data, layer, event, latLng }">
           <LPopup>
@@ -236,6 +237,7 @@ import { ref } from 'vue'
 import LHexbinLayer, { type ScaleBinding } from 'vue-leaflet-hexbin'
 import dataPoints from '@/content/public/data/points_10k'
 import type { HexbinData } from 'leaflet-hexbin'
+import { extent } from 'd3'
 
 type Data = { index: number; coords: [number, number, number] }
 const data = ref(
