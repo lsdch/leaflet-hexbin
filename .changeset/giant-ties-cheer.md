@@ -6,3 +6,4 @@
 
 - Implement optional custom bindings for color, range and opacity scales
 - Improve events callback bindings and expose draw event
+- fix SSR issue in docs
